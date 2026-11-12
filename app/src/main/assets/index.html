@@ -1,68 +1,140 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Sudoku</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><title>Sudoku</title>
 <style>
-:root{--bg:#0c1524;--fg:#f1f4fa;--accent:#e7c58a;--btn:#22354b;--btn-fg:#fff;--btn-border:#536780;--muted:#c3d1e4;--frame:#d4b77d;--cell:#18273a;--cell-fg:#f6f8fb;--grid:#4b5d74;--grid-strong:#b5c3d7;--user:#8ecaff;--related:#273c53;--same:#31587c;--active:#376a97;--ring:#c1e6ff;--pencil:#b5c8df;--num:#9bd4ff;--toggle:#276da5;--toggle-border:#a4dcff;--primary:#286b9f;--primary-border:#5ba5df;--overlay:#0a1325f2;--panel:#13213a;--good:#7fdc9c;color-scheme:dark}
-:root[data-theme=light]{--bg:#eef2f7;--fg:#1b2533;--accent:#8f6216;--btn:#fff;--btn-fg:#1b2533;--btn-border:#b4c0cf;--muted:#4a5a70;--frame:#8a6a2e;--cell:#fff;--cell-fg:#1b2533;--grid:#c9d2dd;--grid-strong:#52627a;--user:#1f6fc0;--related:#e4ecf6;--same:#c4daf2;--active:#a7cbf0;--ring:#1f6fc0;--pencil:#56677e;--num:#1f6fc0;--toggle:#cfe4fa;--toggle-border:#1f6fc0;--primary:#2a73b0;--primary-border:#1d5a8d;--overlay:#eef2f7f2;--panel:#fff;--good:#1d8a45;color-scheme:light}
-*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,sans-serif}
-main{max-width:580px;height:100dvh;margin:auto;padding:12px 12px 18px;display:flex;flex-direction:column;gap:10px;justify-content:space-between}
-header,.status,.tools,.actions,.head-btns{display:flex;justify-content:space-between;align-items:center;gap:8px}.head-btns{gap:6px}
-h1{font-size:23px;margin:0;color:var(--accent)}
-button,select{background:var(--btn);color:var(--btn-fg);border:1px solid var(--btn-border);border-radius:10px;padding:10px;font:inherit}button:active{transform:scale(.97)}button:focus-visible,select:focus-visible{outline:2px solid var(--accent)}
-.head-btns button{padding:7px 9px;font-size:17px;line-height:1.1}select{max-width:112px}
-.status{font-size:13px;color:var(--muted)}.status strong{color:var(--fg)}#mode{font-weight:700;color:var(--accent)}#time.off{visibility:hidden}
-#board{width:min(100%,calc(100dvh - 310px));max-width:500px;aspect-ratio:1;display:grid;grid-template-columns:repeat(9,1fr);align-self:center;border:3px solid var(--frame);border-radius:5px;overflow:hidden;box-shadow:0 8px 25px #0005}
-.cell{border:0;border-right:1px solid var(--grid);border-bottom:1px solid var(--grid);border-radius:0;background:var(--cell);color:var(--cell-fg);font-size:clamp(15px,5vw,27px);font-weight:750;padding:0;min-width:0}
-.cell:nth-child(3n){border-right:2px solid var(--grid-strong)}.cell:nth-child(9n){border-right:0}.cell:nth-child(n+19):nth-child(-n+27),.cell:nth-child(n+46):nth-child(-n+54){border-bottom:2px solid var(--grid-strong)}.cell:nth-child(n+73){border-bottom:0}
-.cell.user{color:var(--user)}.cell.related{background:var(--related)}.cell.same{background:var(--same)}.cell.active{background:var(--active);box-shadow:inset 0 0 0 2px var(--ring)}.cell.wrong{background:#98263c!important;color:#fff!important;box-shadow:inset 0 0 0 2px #ff8a99}
-.pencil{display:grid;grid-template-columns:repeat(3,1fr);width:100%;height:100%;align-items:center;color:var(--pencil);font-size:clamp(7px,1.8vw,11px)}
-#message{min-height:25px;text-align:center;font-size:13px;color:var(--muted);padding:4px}#message.error{background:#a11e34;border:2px solid #ff8d9b;color:#fff;border-radius:10px;padding:9px;font-weight:800;font-size:15px}
-#numbers{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}#numbers button{padding:12px 0;font-size:clamp(18px,5vw,24px);font-weight:750;color:var(--num)}#numbers button.hidden{visibility:hidden;pointer-events:none}
-.tools button{flex:1;font-size:13px;padding:11px 2px}.tools button.active{background:var(--toggle);border-color:var(--toggle-border)}.actions button{flex:1}
-#new,.primary{background:var(--primary);border-color:var(--primary-border);color:#fff}
-.overlay{display:none;position:fixed;inset:0;background:var(--overlay);z-index:5;align-items:center;justify-content:center;padding:16px}.overlay.show{display:flex}
-#pause-screen{flex-direction:column;gap:18px}
-.panel{width:min(100%,420px);max-height:100%;overflow:auto;background:var(--panel);border:1px solid var(--btn-border);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 12px 40px #0006}
-.panel h2{margin:0;color:var(--accent);font-size:22px}.panel h3{margin:4px 0 0;font-size:15px;color:var(--muted)}.panel p{margin:0;color:var(--muted);line-height:1.4}.center{text-align:center}
-.row-btns{display:flex;gap:8px}.row-btns button{flex:1}
-.big-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;font-size:12px;color:var(--muted)}.big-stats div{background:var(--btn);border:1px solid var(--btn-border);border-radius:10px;padding:8px 4px}.big-stats b{display:block;font-size:22px;color:var(--accent)}
-table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:7px 4px;text-align:right;border-bottom:1px solid var(--grid)}th{color:var(--muted);font-weight:600;font-size:12px}th:first-child,td:first-child{text-align:left}
-label.setting{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:4px 0;font-size:15px}label.setting small{display:block;color:var(--muted);font-size:12px}
-input[type=checkbox]{width:22px;height:22px;flex:none;accent-color:var(--primary)}.good{color:var(--good);font-weight:700}
-@media(max-height:650px){main{gap:4px;padding:5px 10px}h1{font-size:20px}#board{width:min(100%,calc(100dvh - 245px))}.tools button,.actions button{padding:6px 2px}#numbers button{padding:6px 0}.status{font-size:11px}.head-btns button{padding:5px 7px}}
-</style></head><body><main>
-<header><h1>Sudoku</h1><div class="head-btns"><button id="daily-btn" aria-label="Daily challenge">📅</button><button id="stats-btn" aria-label="Statistics">📊</button><button id="settings-btn" aria-label="Settings">⚙️</button><select id="difficulty" aria-label="Difficulty"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option><option value="expert">Expert</option><option value="master">Master</option></select></div></header>
-<div class="status"><span id="mode">Medium</span><span id="time">00:00</span><span id="mistakes">Mistakes 0/3</span><button id="pause">Pause</button></div>
-<div id="board" aria-label="Sudoku puzzle"></div><div id="message" role="status" aria-live="polite">Select a square to begin</div>
+@font-face{font-family:Fraunces;src:url(fonts/fraunces-latin-opsz-normal.woff2) format('woff2');font-weight:100 900;font-style:normal;font-display:block}
+@font-face{font-family:Fraunces;src:url(fonts/fraunces-latin-opsz-italic.woff2) format('woff2');font-weight:100 900;font-style:italic;font-display:block}
+@font-face{font-family:Figtree;src:url(fonts/figtree-latin-wght-normal.woff2) format('woff2');font-weight:300 900;font-display:block}
+:root{--bg:#0d1a2e;--bg-glow:#17305a;--surface:#14243a;--surface-2:#1b2e48;--line:#2a3f5c;--line-strong:#6d7f98;--text:#eef2f8;--muted:#8fa3be;--brass:#d9b26a;--brass-deep:#a9843f;--ink:#8cc4ff;--related:#182a43;--same:#22426a;--active:#2b5182;--danger:#e5536b;--good:#6fd39a;--shadow:0 18px 40px #02081599;--scrim:#07101fcc;color-scheme:dark}
+:root[data-theme=light]{--bg:#e9edf3;--bg-glow:#f8fafc;--surface:#fff;--surface-2:#f1f4f8;--line:#d3dbe6;--line-strong:#5b6b83;--text:#15233a;--muted:#5d6e86;--brass:#9a6f22;--brass-deep:#7a5517;--ink:#1e5fb4;--related:#e8eff8;--same:#cfe0f5;--active:#bcd5f3;--danger:#c93250;--good:#1d8a45;--shadow:0 18px 40px #1a2b4a29;--scrim:#e9edf3d9;color-scheme:light}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{height:100%;margin:0}
+body{background:radial-gradient(120% 70% at 50% 0%,var(--bg-glow),var(--bg) 70%) fixed;color:var(--text);font-family:Figtree,system-ui,sans-serif;font-variant-numeric:tabular-nums;-webkit-user-select:none;user-select:none;overflow:hidden}
+svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+main{max-width:560px;height:100dvh;margin:auto;padding:14px 14px 18px;display:flex;flex-direction:column;gap:12px;justify-content:space-between}
+header{display:flex;align-items:center;justify-content:space-between}
+h1{margin:0;font:italic 600 30px/1 Fraunces,serif;font-variation-settings:'opsz' 72;letter-spacing:-.01em;color:var(--brass)}
+.icons{display:flex;gap:4px}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;transition:transform .14s cubic-bezier(.3,.7,.4,1.4),background-color .2s,color .2s,opacity .2s}
+button:active{transform:scale(.93)}button:focus-visible,select:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.icon-btn{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;color:var(--muted)}.icon-btn:active{background:var(--surface-2);color:var(--text)}
+.status{display:flex;align-items:center;gap:10px}
+.pill{appearance:none;-webkit-appearance:none;background:var(--surface);border:1px solid var(--line);border-radius:999px;color:var(--text);font:600 14px Figtree,sans-serif;padding:8px 30px 8px 14px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238fa3be' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+#daily-pill{display:none;padding:8px 14px;background-image:none;color:var(--brass);border-color:var(--brass-deep)}
+body.daily #difficulty{display:none}body.daily #daily-pill{display:inline-block}
+#time{flex:1;text-align:center;font:600 18px Figtree,sans-serif;letter-spacing:.02em}#time.off{visibility:hidden}
+#mistakes{display:flex;gap:5px;align-items:center;font-size:13px;color:var(--muted)}#mistakes i{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--line-strong);transition:background-color .3s,border-color .3s,transform .3s}#mistakes i.on{background:var(--danger);border-color:var(--danger);transform:scale(1.15)}
+#board{position:relative;width:min(100%,calc(100dvh - 340px));aspect-ratio:1;align-self:center;display:grid;grid-template-columns:repeat(9,1fr);background:var(--surface);border-radius:14px;overflow:hidden;box-shadow:0 0 0 2px var(--brass-deep),0 0 0 6px var(--surface-2),var(--shadow)}
+.cell{position:relative;display:grid;place-items:center;min-width:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--text);transition:background-color .18s ease}
+.cell:nth-child(3n){border-right:1.5px solid var(--line-strong)}.cell:nth-child(9n){border-right:0}.cell:nth-child(n+19):nth-child(-n+27),.cell:nth-child(n+46):nth-child(-n+54){border-bottom:1.5px solid var(--line-strong)}.cell:nth-child(n+73){border-bottom:0}
+.cell.related{background:var(--related)}.cell.same{background:var(--same)}.cell.active{background:var(--active)}
+.cell.active::after{content:'';position:absolute;inset:1px;border-radius:4px;box-shadow:inset 0 0 0 2px var(--brass);animation:ring .25s cubic-bezier(.3,.7,.4,1.3)}
+.digit{font:600 clamp(18px,6vw,30px)/1 Fraunces,serif;font-variation-settings:'opsz' 36}
+.cell.user .digit{font-style:italic;font-weight:500;color:var(--ink)}
+.cell.wrong{background:color-mix(in srgb,var(--danger) 22%,transparent)}.cell.wrong .digit{color:var(--danger);text-decoration:line-through 1.5px}
+.pencil{display:grid;grid-template-columns:repeat(3,1fr);width:100%;height:100%;padding:2px;align-items:center;justify-items:center;color:var(--muted);font:600 clamp(7px,2vw,11px)/1 Figtree,sans-serif}.pencil span{transition:color .2s}.pencil .hl{color:var(--brass)}
+#message{height:22px;text-align:center;font-size:14px;color:var(--muted);transition:color .2s}#message.error{color:var(--danger);font-weight:700}
+#numbers{display:grid;grid-template-columns:repeat(9,1fr);gap:5px}
+#numbers button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 0 7px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+#numbers b{font:500 clamp(22px,6.4vw,30px)/1 Fraunces,serif;font-variation-settings:'opsz' 48;color:var(--ink)}#numbers small{font-size:10px;color:var(--muted)}
+#numbers button.complete{opacity:0;transform:scale(.6);pointer-events:none}
+.tools{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.tools button{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;font-size:12px;font-weight:600;color:var(--muted);border-radius:12px}
+.tools button.on{color:var(--brass)}.tools button.on svg{filter:drop-shadow(0 0 6px var(--brass))}
+.badge{position:absolute;top:2px;left:calc(50% + 8px);min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--brass);color:var(--bg);font-size:11px;font-weight:800;line-height:17px}.badge.zero{background:var(--line-strong)}
+.actions{display:grid;grid-template-columns:1.4fr 1fr;gap:8px}
+.btn{padding:14px;border-radius:14px;font-weight:700;font-size:15px;background:var(--surface);border:1px solid var(--line);color:var(--text)}
+.btn.primary{background:linear-gradient(180deg,var(--brass),var(--brass-deep));border-color:transparent;color:#1a1305;box-shadow:0 6px 18px color-mix(in srgb,var(--brass) 30%,transparent)}
+:root[data-theme=light] .btn.primary{color:#fff}
+/* overlays */
+.overlay{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:18px;background:var(--scrim);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);visibility:hidden;opacity:0;transition:opacity .28s ease,visibility 0s .28s}
+.overlay.show{visibility:visible;opacity:1;transition:opacity .28s ease}
+.panel{width:min(100%,400px);max-height:100%;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow);transform:translateY(24px) scale(.96);transition:transform .38s cubic-bezier(.2,.9,.25,1.15)}
+.overlay.show .panel{transform:none}
+.panel h2{margin:0;font:600 26px/1.1 Fraunces,serif;font-variation-settings:'opsz' 72}
+.panel h3{margin:6px 0 0;font-size:14px;color:var(--muted);font-weight:600}.panel p{margin:0;color:var(--muted);line-height:1.45}
+.row-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;font-size:12px;color:var(--muted)}.tiles div{background:var(--surface-2);border-radius:14px;padding:12px 4px 10px}.tiles b{display:block;font:600 26px/1.1 Fraunces,serif;color:var(--text);margin-bottom:2px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 4px;text-align:right;border-bottom:1px solid var(--line)}tr:last-child td{border-bottom:0}th{color:var(--muted);font-weight:600;font-size:12px}th:first-child,td:first-child{text-align:left}td:first-child{font-weight:600}
+label.setting{display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:15px;font-weight:600}label.setting small{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:2px;line-height:1.35}
+.switch{appearance:none;-webkit-appearance:none;flex:none;width:46px;height:28px;border-radius:14px;background:var(--line);position:relative;transition:background-color .25s;margin:0}.switch::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0005;transition:transform .25s cubic-bezier(.3,.7,.4,1.3)}.switch:checked{background:var(--brass)}.switch:checked::after{transform:translateX(18px)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface-2);border-radius:12px;padding:3px}.seg button{padding:8px 0;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted)}.seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 4px #0003}
+#pause-screen .panel{align-items:center;text-align:center}
+.win-time{font:italic 500 56px/1 Fraunces,serif;font-variation-settings:'opsz' 144;color:var(--brass)}
+.record{align-self:center;padding:5px 12px;border-radius:999px;background:color-mix(in srgb,var(--brass) 18%,transparent);color:var(--brass);font-size:13px;font-weight:700}
+#win-screen .panel{text-align:center}.good{color:var(--good);font-weight:700}
+/* motion */
+@keyframes ring{from{opacity:0;transform:scale(1.25)}}
+@keyframes pop{0%{transform:scale(.4);opacity:0}55%{transform:scale(1.18);opacity:1}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+@keyframes flash{0%{box-shadow:inset 0 0 0 40px transparent}35%{box-shadow:inset 0 0 0 40px color-mix(in srgb,var(--brass) 38%,transparent)}100%{box-shadow:inset 0 0 0 40px transparent}}
+@keyframes intro{from{opacity:0;transform:scale(.6)}}
+@keyframes wave{0%{transform:none}40%{transform:scale(.82);box-shadow:inset 0 0 0 40px color-mix(in srgb,var(--brass) 45%,transparent)}100%{transform:none}}
+.pop .digit,.pop .pencil{animation:pop .34s cubic-bezier(.3,.7,.4,1)}
+.shake{animation:shake .4s ease}#message.shake{animation:shake .4s ease}
+.flash{animation:flash .6s ease var(--d,0ms) both}
+.intro>*{animation:intro .45s cubic-bezier(.2,.8,.3,1.2) var(--d,0ms) both}
+.wave{animation:wave .7s ease var(--d,0ms) both}
+@media(max-height:680px){main{gap:7px;padding:8px 12px 10px}h1{font-size:25px}#board{width:min(100%,calc(100dvh - 270px))}#numbers button{padding:5px 0 4px}.tools button{padding:2px 0}.btn{padding:10px}.icon-btn{height:36px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style></head><body>
+<svg style="display:none"><defs>
+<symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M9.5 15l1.8 1.8 3.4-3.6"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M5 20V11M12 20V4M19 20v-6"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></symbol>
+<symbol id="i-erase" viewBox="0 0 24 24"><path d="M20 20H9L4.5 15.5a2 2 0 0 1 0-2.8l8.8-8.8a2 2 0 0 1 2.8 0l3.7 3.7a2 2 0 0 1 0 2.8L11 19"/><path d="M8.5 10.5l6 6"/></symbol>
+<symbol id="i-pencil" viewBox="0 0 24 24"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"/><path d="M14.5 5.5l3 3"/></symbol>
+<symbol id="i-wand" viewBox="0 0 24 24"><path d="M4 20L15 9M13 7l2-2 4 4-2 2z"/><path d="M8 3v3M6.5 4.5h3M19 14v3M17.5 15.5h3M5 10v2M4 11h2"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1.1 1.3 1.1 2.2h5c0-.9.5-1.7 1.1-2.2A6 6 0 0 0 12 3z"/></symbol>
+<symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+</defs></svg>
+<main>
+<header><h1>Sudoku</h1><div class="icons">
+<button class="icon-btn" id="daily-btn" aria-label="Daily challenge"><svg><use href="#i-cal"/></svg></button>
+<button class="icon-btn" id="stats-btn" aria-label="Statistics"><svg><use href="#i-chart"/></svg></button>
+<button class="icon-btn" id="settings-btn" aria-label="Settings"><svg><use href="#i-gear"/></svg></button></div></header>
+<div class="status">
+<select id="difficulty" class="pill" aria-label="Difficulty"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option><option value="expert">Expert</option><option value="master">Master</option></select>
+<button id="daily-pill" class="pill">Daily</button>
+<span id="time">00:00</span><span id="mistakes" aria-label="Mistakes"></span>
+<button class="icon-btn" id="pause" aria-label="Pause"><svg><use href="#i-pause"/></svg></button></div>
+<div id="board" aria-label="Sudoku puzzle"></div>
+<div id="message" role="status" aria-live="polite"></div>
 <div id="numbers" aria-label="Number keypad"></div>
-<div class="tools"><button id="erase">Erase</button><button id="notes">Notes</button><button id="autonotes">Auto</button><button id="hint">Hint (3)</button><button id="undo">Undo</button></div>
-<div class="actions"><button id="new">New puzzle</button><button id="restart">Restart</button></div>
+<div class="tools">
+<button id="undo"><svg><use href="#i-undo"/></svg>Undo</button>
+<button id="erase"><svg><use href="#i-erase"/></svg>Erase</button>
+<button id="notes" aria-pressed="false"><svg><use href="#i-pencil"/></svg>Notes</button>
+<button id="autonotes"><svg><use href="#i-wand"/></svg>Fill notes</button>
+<button id="hint"><svg><use href="#i-bulb"/></svg>Hint<span class="badge" id="hint-count">3</span></button></div>
+<div class="actions"><button class="btn primary" id="new">New puzzle</button><button class="btn" id="restart">Restart</button></div>
 </main>
-<div id="pause-screen" class="overlay"><h2>Game paused</h2><button id="resume" class="primary">Resume</button></div>
-<div id="win-screen" class="overlay"><div class="panel center"><h2 id="win-title">Puzzle complete!</h2><p id="win-detail"></p><div class="row-btns"><button class="close">View board</button><button id="win-new" class="primary">New puzzle</button></div></div></div>
+<div id="pause-screen" class="overlay"><div class="panel"><h2>Paused</h2><p id="pause-info"></p><button class="btn primary" id="resume" style="width:100%">Resume</button></div></div>
+<div id="win-screen" class="overlay"><div class="panel"><h2 id="win-title">Solved</h2><div class="win-time" id="win-time">00:00</div><p id="win-detail"></p><span class="record" id="win-record" hidden></span><div class="row-btns"><button class="btn close">View board</button><button class="btn primary" id="win-new">New puzzle</button></div></div></div>
 <div id="daily-screen" class="overlay"><div class="panel"><h2>Daily challenge</h2><p id="daily-info"></p>
-<div class="big-stats"><div><b id="d-streak">0</b>Current streak</div><div><b id="d-best">0</b>Best streak</div><div><b id="d-total">0</b>Completed</div></div>
-<button id="daily-play" class="primary">Play today's puzzle</button><button id="daily-classic">Back to classic game</button><button class="close">Close</button></div></div>
+<div class="tiles"><div><b id="d-streak">0</b>Day streak</div><div><b id="d-best">0</b>Best streak</div><div><b id="d-total">0</b>Solved</div></div>
+<button class="btn primary" id="daily-play">Play today's puzzle</button><button class="btn" id="daily-classic">Back to classic game</button></div></div>
 <div id="stats-screen" class="overlay"><div class="panel"><h2>Statistics</h2>
-<table><thead><tr><th>Level</th><th>Played</th><th>Won</th><th>Win %</th><th>Best</th><th>Streak</th></tr></thead><tbody id="stats-body"></tbody></table>
-<h3>Daily challenge</h3><div class="big-stats"><div><b id="s-dstreak">0</b>Current streak</div><div><b id="s-dbest">0</b>Best streak</div><div><b id="s-dtotal">0</b>Completed</div></div>
-<div class="row-btns"><button id="reset-stats">Reset stats</button><button class="close primary">Close</button></div></div></div>
+<table><thead><tr><th>Level</th><th>Played</th><th>Won</th><th>Win rate</th><th>Best</th><th>Streak</th></tr></thead><tbody id="stats-body"></tbody></table>
+<h3>Daily challenge</h3><div class="tiles"><div><b id="s-dstreak">0</b>Day streak</div><div><b id="s-dbest">0</b>Best streak</div><div><b id="s-dtotal">0</b>Solved</div></div>
+<div class="row-btns"><button class="btn" id="reset-stats">Reset stats</button><button class="btn primary close">Close</button></div></div></div>
 <div id="settings-screen" class="overlay"><div class="panel"><h2>Settings</h2>
-<label class="setting">Theme<select id="s-theme"><option value="system">System</option><option value="dark">Dark</option><option value="light">Light</option></select></label>
-<label class="setting"><span>Mistake limit<small>Game over after 3 mistakes</small></span><input type="checkbox" id="s-limit"></label>
-<label class="setting"><span>Show timer</span><input type="checkbox" id="s-timer"></label>
-<label class="setting"><span>Highlight matching numbers</span><input type="checkbox" id="s-highlight"></label>
-<label class="setting"><span>Smart notes<small>Placing a number clears it from notes in the same row, column and box</small></span><input type="checkbox" id="s-autoclear"></label>
-<button class="close primary">Done</button></div></div>
+<div class="seg" id="s-theme"><button data-v="system">System</button><button data-v="dark">Dark</button><button data-v="light">Light</button></div>
+<label class="setting"><span>Mistake limit<small>The game ends after 3 mistakes</small></span><input type="checkbox" class="switch" id="s-limit"></label>
+<label class="setting"><span>Show timer</span><input type="checkbox" class="switch" id="s-timer"></label>
+<label class="setting"><span>Highlight matching numbers</span><input type="checkbox" class="switch" id="s-highlight"></label>
+<label class="setting"><span>Smart notes<small>Placing a number removes it from notes in the same row, column and box</small></span><input type="checkbox" class="switch" id="s-autoclear"></label>
+<label class="setting"><span>Vibration</span><input type="checkbox" class="switch" id="s-haptics"></label>
+<button class="btn primary close">Done</button></div></div>
 <script>
 (()=>{'use strict';const $=id=>document.getElementById(id);
 const LEVELS=['easy','medium','hard','expert','master'],NAMES={easy:'Easy',medium:'Medium',hard:'Hard',expert:'Expert',master:'Master'};
 const DAILY_LEVELS=['hard','easy','easy','medium','medium','hard','expert']; // Sunday..Saturday
 function load(k,d){try{let v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:d}catch(e){return d}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-let settings=Object.assign({theme:'system',limit:true,timer:true,highlight:true,autoclear:true},load('sudoku-settings',{}));
+let settings=Object.assign({theme:'system',limit:true,timer:true,highlight:true,autoclear:true,haptics:true},load('sudoku-settings',{}));
 let stats=load('sudoku-stats',{});
 let daily=Object.assign({last:'',streak:0,best:0,done:{}},load('sudoku-daily-log',{}));
 let solution=[],puzzle=[],values=[],pencils=[],selected=-1,mistakes=0,hints=3,seconds=0,notesMode=false,done=false,won=false,paused=false,history=[],difficulty='medium',gameMode='classic',dailyDate='';
-let rand=Math.random;
+let rand=Math.random;const cells=[];
 
 /* ---------- helpers ---------- */
 const fmt=s=>String(s/60|0).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
@@ -72,7 +144,10 @@ function shiftDay(k,n){let d=parseDay(k);d.setDate(d.getDate()+n);return dayKey(
 const dailyLevel=k=>DAILY_LEVELS[parseDay(k).getDay()];
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function seeded(a){return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-function peers(i){let r=i/9|0,c=i%9,br=(r/3|0)*3,bc=(c/3|0)*3,out=new Set;for(let k=0;k<9;k++){out.add(r*9+k);out.add(k*9+c);out.add((br+(k/3|0))*9+bc+k%3)}out.delete(i);return out}
+const rowOf=i=>[...Array(9)].map((_,k)=>(i/9|0)*9+k),colOf=i=>[...Array(9)].map((_,k)=>k*9+i%9),boxOf=i=>{let br=(i/27|0)*3,bc=(i%9/3|0)*3;return[...Array(9)].map((_,k)=>(br+(k/3|0))*9+bc+k%3)};
+function peers(i){let s=new Set([...rowOf(i),...colOf(i),...boxOf(i)]);s.delete(i);return s}
+function buzz(ms){if(settings.haptics&&navigator.vibrate)navigator.vibrate(ms)}
+function animate(el,cls,delay){if(delay!=null)el.style.setProperty('--d',delay+'ms');el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);clearTimeout(el['t'+cls]);el['t'+cls]=setTimeout(()=>el.classList.remove(cls),(delay||0)+900)}
 
 /* ---------- puzzle generation ---------- */
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=rand()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -91,94 +166,119 @@ function applyState(s){
   won=!!s.won||values.every((v,i)=>v===solution[i]);difficulty=LEVELS.includes(s.difficulty)?s.difficulty:'medium';
   gameMode=s.gameMode==='daily'?'daily':'classic';dailyDate=s.dailyDate||'';history=[];
   if(gameMode==='classic')$('difficulty').value=difficulty;
-  closeOverlays();$('pause-screen').classList.toggle('show',paused);
-  message(won?'Puzzle complete! Great job.':'Select a square to begin');draw();return true}
+  closeOverlays();if(paused)showPause();
+  message(won?'Solved. Start a new puzzle when you’re ready.':'');draw();intro();return true}
 
 /* ---------- stats ---------- */
 function levelStats(k){return stats[k]||(stats[k]={played:0,won:0,best:0,streak:0,bestStreak:0})}
 function hasProgress(){return mistakes>0||values.some((v,i)=>v&&!puzzle[i])}
 function recordAbandon(){if(gameMode!=='classic'||won||!hasProgress())return;let s=levelStats(difficulty);s.played++;s.streak=0;save('sudoku-stats',stats)}
-function recordWin(){ // returns detail text for the win screen
+function recordWin(){ // returns {detail, record}
   if(gameMode==='daily'){
-    if(daily.done[dailyDate]!=null)return 'Solved again in '+fmt(seconds)+'.';
+    if(daily.done[dailyDate]!=null)return{detail:'You’ve already solved today’s puzzle. This replay isn’t counted.'};
     daily.done[dailyDate]=seconds;
     if(dailyDate>daily.last){daily.streak=daily.last===shiftDay(dailyDate,-1)?daily.streak+1:1;daily.last=dailyDate}
     daily.best=Math.max(daily.best,daily.streak);save('sudoku-daily-log',daily);
-    return 'Solved in '+fmt(seconds)+'. Daily streak: '+currentStreak()+(currentStreak()===1?' day':' days')+' 🔥'}
-  let s=levelStats(difficulty),record=!s.best||seconds<s.best;
-  s.played++;s.won++;s.streak++;s.bestStreak=Math.max(s.bestStreak,s.streak);if(record)s.best=seconds;save('sudoku-stats',stats);
-  return NAMES[difficulty]+' solved in '+fmt(seconds)+' with '+mistakes+(mistakes===1?' mistake':' mistakes')+'.'+(record?' 🏆 New best time!':' Best: '+fmt(s.best))}
+    let s=currentStreak();return{detail:'Today’s '+NAMES[difficulty].toLowerCase()+' puzzle, '+mistakes+(mistakes===1?' mistake.':' mistakes.'),record:s+(s===1?'-day streak':'-day streak')+(s>1&&s===daily.best?', your best yet':'')}}
+  let s=levelStats(difficulty),rec=!s.best||seconds<s.best;
+  s.played++;s.won++;s.streak++;s.bestStreak=Math.max(s.bestStreak,s.streak);if(rec)s.best=seconds;save('sudoku-stats',stats);
+  return{detail:NAMES[difficulty]+' puzzle, '+mistakes+(mistakes===1?' mistake.':' mistakes.')+(rec?'':' Your best is '+fmt(s.best)+'.'),record:rec&&s.won>1?'New best time':s.won===1?'First '+NAMES[difficulty].toLowerCase()+' win':null}}
 function currentStreak(){let t=dayKey();return daily.last===t||daily.last===shiftDay(t,-1)?daily.streak:0}
 
 /* ---------- drawing ---------- */
-function draw(){let board=$('board');board.replaceChildren();for(let i=0;i<81;i++){let b=document.createElement('button');b.className='cell';let r=i/9|0,c=i%9;if(!puzzle[i]&&values[i])b.classList.add('user');if(selected>=0){let sr=selected/9|0,sc=selected%9;if(r===sr||c===sc||(r/3|0)===(sr/3|0)&&(c/3|0)===(sc/3|0))b.classList.add('related');if(settings.highlight&&values[i]&&values[i]===values[selected])b.classList.add('same');if(i===selected)b.classList.add('active')}if(values[i]&&values[i]!==solution[i])b.classList.add('wrong');if(values[i])b.textContent=values[i];else if(pencils[i].size){let p=document.createElement('div');p.className='pencil';for(let n=1;n<=9;n++){let sp=document.createElement('span');sp.textContent=pencils[i].has(n)?n:'';p.append(sp)}b.append(p)}b.setAttribute('aria-label','Row '+(r+1)+' column '+(c+1)+(values[i]?', '+values[i]:', empty'));b.onclick=()=>{if(paused||done||overlayOpen())return;selected=i;draw()};board.append(b)}
-  for(let n=1;n<=9;n++){let btn=$('numbers').children[n-1];let complete=values.filter(v=>v===n).length>=9;btn.classList.toggle('hidden',complete);btn.disabled=complete}
-  $('mode').textContent=(gameMode==='daily'?'Daily · ':'')+NAMES[difficulty];
-  $('mistakes').textContent='Mistakes '+mistakes+(settings.limit?'/3':'');$('hint').textContent='Hint ('+hints+')';$('notes').classList.toggle('active',notesMode);
+function buildBoard(){let board=$('board');for(let i=0;i<81;i++){let b=document.createElement('button');b.className='cell';b.onclick=()=>{if(paused||done||overlayOpen())return;selected=i;draw()};cells.push(b);board.append(b)}}
+function draw(){
+  let sel=selected>=0?values[selected]:0,sr=selected/9|0,sc=selected%9;
+  for(let i=0;i<81;i++){let b=cells[i],r=i/9|0,c=i%9,v=values[i];
+    let related=selected>=0&&(r===sr||c===sc||(r/3|0)===(sr/3|0)&&(c/3|0)===(sc/3|0));
+    b.classList.toggle('user',!puzzle[i]&&!!v);b.classList.toggle('related',related&&i!==selected);
+    b.classList.toggle('same',settings.highlight&&!!v&&v===sel&&i!==selected);b.classList.toggle('active',i===selected);b.classList.toggle('wrong',!!v&&v!==solution[i]);
+    let key=v?'v'+v:'p'+[...pencils[i]].sort().join('');
+    if(b.dataset.k!==key){b.dataset.k=key;b.replaceChildren();
+      if(v){let d=document.createElement('span');d.className='digit';d.textContent=v;b.append(d)}
+      else if(pencils[i].size){let p=document.createElement('div');p.className='pencil';for(let n=1;n<=9;n++){let s=document.createElement('span');s.textContent=pencils[i].has(n)?n:'';p.append(s)}b.append(p)}}
+    let p=b.querySelector('.pencil');if(p)[...p.children].forEach((s,k)=>s.classList.toggle('hl',settings.highlight&&sel===k+1&&!!s.textContent));
+    b.setAttribute('aria-label','Row '+(r+1)+' column '+(c+1)+(v?', '+v:', empty'))}
+  for(let n=1;n<=9;n++){let btn=$('numbers').children[n-1],left=9-values.filter((v,i)=>v===n&&v===solution[i]).length;btn.classList.toggle('complete',left<=0);btn.disabled=left<=0;btn.querySelector('small').textContent=left>0?left:''}
+  document.body.classList.toggle('daily',gameMode==='daily');$('daily-pill').textContent='Daily · '+NAMES[difficulty];
+  let m=$('mistakes');if(settings.limit){if(m.children.length!==3)m.innerHTML='<i></i><i></i><i></i>';[...m.children].forEach((d,k)=>d.classList.toggle('on',k<mistakes))}else m.textContent=mistakes+(mistakes===1?' mistake':' mistakes');
+  $('hint-count').textContent=hints;$('hint-count').classList.toggle('zero',!hints);
+  $('notes').classList.toggle('on',notesMode);$('notes').setAttribute('aria-pressed',notesMode);
   $('time').textContent=fmt(seconds);$('time').classList.toggle('off',!settings.timer);store()}
-function message(t,error=false){$('message').textContent=t;$('message').classList.toggle('error',error)}
+function message(t,error=false){let m=$('message');m.textContent=t;m.classList.toggle('error',error);if(error)animate(m,'shake')}
+function intro(){$('board').classList.remove('intro');cells.forEach((b,i)=>b.style.setProperty('--d',((i/9|0)+i%9)*22+'ms'));void $('board').offsetWidth;$('board').classList.add('intro');setTimeout(()=>$('board').classList.remove('intro'),900)}
 
 /* ---------- gameplay ---------- */
 function snapshot(){history.push({values:values.slice(),pencils:pencils.map(x=>[...x]),mistakes,hints});if(history.length>100)history.shift()}
-function checkWin(){if(values.every((v,i)=>v===solution[i])){done=true;won=true;selected=-1;message('Puzzle complete! Great job.');let detail=recordWin();$('win-title').textContent=gameMode==='daily'?'Daily challenge complete!':'Puzzle complete!';$('win-detail').textContent=detail;openOverlay('win-screen');return true}return false}
-function enter(n){if(paused||done||selected<0||puzzle[selected])return;
-  if(notesMode&&n){snapshot();pencils[selected].has(n)?pencils[selected].delete(n):pencils[selected].add(n);message('');draw();return}
+function celebrateUnits(i){ // shimmer any row, column or box that this placement just completed
+  let origin=i,units=[rowOf(i),colOf(i),boxOf(i)].filter(u=>u.every(j=>values[j]===solution[j]));
+  let seen=new Set;units.forEach(u=>u.forEach(j=>{if(seen.has(j))return;seen.add(j);let d=Math.abs((j/9|0)-(origin/9|0))+Math.abs(j%9-origin%9);animate(cells[j],'flash',d*45)}));
+  if(units.length)buzz([8,40,8])}
+function checkWin(){if(!values.every((v,i)=>v===solution[i]))return false;
+  done=true;won=true;selected=-1;message('');let r=recordWin();
+  cells.forEach((b,i)=>animate(b,'wave',(Math.abs((i/9|0)-4)+Math.abs(i%9-4))*55));buzz([20,60,20,60,40]);
+  $('win-title').textContent=gameMode==='daily'?'Daily solved':'Solved';$('win-time').textContent=fmt(seconds);$('win-detail').textContent=r.detail;
+  $('win-record').hidden=!r.record;$('win-record').textContent=r.record||'';setTimeout(()=>{if(won)openOverlay('win-screen')},900);return true}
+function enter(n){if(paused||done||selected<0||puzzle[selected])return;let b=cells[selected];
+  if(notesMode&&n){snapshot();pencils[selected].has(n)?pencils[selected].delete(n):pencils[selected].add(n);message('');draw();buzz(5);return}
   if(values[selected]===n)return;snapshot();values[selected]=n;pencils[selected].clear();
-  if(n&&n!==solution[selected]){mistakes++;message('✕ WRONG NUMBER — '+n+' is incorrect!',true);if(navigator.vibrate)navigator.vibrate(90)}
-  else{message('');if(n&&settings.autoclear)for(let p of peers(selected))pencils[p].delete(n)}
-  if(settings.limit&&mistakes>=3){done=true;message('✕ GAME OVER — 3 mistakes. Undo or start again.',true)}else checkWin();draw()}
-function autoNotes(){if(paused||done)return;snapshot();let filled=0;for(let i=0;i<81;i++)if(!values[i]){pencils[i]=new Set(candidates(values,i));filled++}message(filled?'Notes filled in for every empty square':'');draw()}
-function reset(){values=puzzle.slice();pencils=Array.from({length:81},()=>new Set);selected=-1;mistakes=0;hints=3;seconds=0;notesMode=false;done=false;won=false;paused=false;history=[];closeOverlays();message(gameMode==='daily'?'Daily challenge — '+NAMES[difficulty]:'Select a square to begin');draw()}
+  if(n&&n!==solution[selected]){mistakes++;message(n+' doesn’t go here',true);buzz(90);draw();animate(b,'shake');animate(b,'pop')}
+  else{message('');if(n&&settings.autoclear)for(let p of peers(selected))pencils[p].delete(n);draw();if(n){animate(b,'pop');buzz(10);celebrateUnits(selected)}}
+  if(settings.limit&&mistakes>=3){done=true;message('Three mistakes. Undo the last move or start again.',true);draw()}else checkWin()}
+function autoNotes(){if(paused||done)return;snapshot();let filled=[];for(let i=0;i<81;i++)if(!values[i]){pencils[i]=new Set(candidates(values,i));filled.push(i)}message(filled.length?'Notes added to every empty square':'');draw();filled.forEach(i=>animate(cells[i],'pop'));buzz(10)}
+function reset(){values=puzzle.slice();pencils=Array.from({length:81},()=>new Set);selected=-1;mistakes=0;hints=3;seconds=0;notesMode=false;done=false;won=false;paused=false;history=[];closeOverlays();$('pause-screen').classList.remove('show');message(gameMode==='daily'?'Today’s puzzle is the same for every player':'');draw();intro()}
 function fresh(){recordAbandon();gameMode='classic';dailyDate='';generate($('difficulty').value);reset()}
 function startDaily(replay=false){let t=dayKey();store(); // classic and daily games have separate save slots, so switching never loses progress
-  if(!replay&&applyState(load('sudoku-daily',null))&&gameMode==='daily'&&dailyDate===t){closeOverlays();$('pause-screen').classList.toggle('show',paused);return}
+  if(!replay&&applyState(load('sudoku-daily',null))&&gameMode==='daily'&&dailyDate===t)return;
   gameMode='daily';dailyDate=t;generate(dailyLevel(t),seeded(hash('sudoku-daily-'+t)));reset()}
-function backToClassic(){let s=load('sudoku-save',null);if(!(s&&applyState(Object.assign(s,{gameMode:'classic'})))){gameMode='classic';dailyDate='';generate($('difficulty').value);reset()}closeOverlays();$('pause-screen').classList.toggle('show',paused)}
+function backToClassic(){let s=load('sudoku-save',null);if(!(s&&applyState(Object.assign(s,{gameMode:'classic'})))){gameMode='classic';dailyDate='';generate($('difficulty').value);reset()}}
 
 /* ---------- overlays ---------- */
 const overlayOpen=()=>!!document.querySelector('.overlay.show');
 function openOverlay(id){$(id).classList.add('show')}
 function closeOverlays(){document.querySelectorAll('.overlay.show').forEach(o=>{if(o.id!=='pause-screen')o.classList.remove('show')})}
+function showPause(){$('pause-info').textContent=(gameMode==='daily'?'Daily · ':'')+NAMES[difficulty]+' · '+fmt(seconds);openOverlay('pause-screen')}
 function resume(){paused=false;$('pause-screen').classList.remove('show');store()}
 window.sudokuNavigate=()=>{ // called by the Android back button; returns true if it handled the press
   let open=[...document.querySelectorAll('.overlay.show')];if(!open.length)return false;
   if(open.some(o=>o.id!=='pause-screen'))closeOverlays();else resume();return true};
-function showDaily(){let t=dayKey(),solved=daily.done[t];
-  $('daily-info').innerHTML='';let info=$('daily-info');info.append(parseDay(t).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+' · '+NAMES[dailyLevel(t)]);
-  if(solved!=null){let s=document.createElement('span');s.className='good';s.textContent=' — solved in '+fmt(solved)+' ✓';info.append(s)}
+function showDaily(){let t=dayKey(),solved=daily.done[t],info=$('daily-info');info.replaceChildren(parseDay(t).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+'. Today’s puzzle is '+NAMES[dailyLevel(t)].toLowerCase()+'.');
+  if(solved!=null){let s=document.createElement('span');s.className='good';s.textContent=' Solved in '+fmt(solved)+'.';info.append(s)}
   $('d-streak').textContent=currentStreak();$('d-best').textContent=daily.best;$('d-total').textContent=Object.keys(daily.done).length;
   let playingToday=gameMode==='daily'&&dailyDate===t;
-  $('daily-play').textContent=playingToday&&!won?'Continue today\'s puzzle':solved!=null?'Play again':'Play today\'s puzzle';
+  $('daily-play').textContent=playingToday&&!won?'Continue today’s puzzle':solved!=null?'Play it again':'Play today’s puzzle';
   $('daily-classic').style.display=gameMode==='daily'?'':'none';openOverlay('daily-screen')}
 function showStats(){let body=$('stats-body');body.replaceChildren();for(let k of LEVELS){let s=levelStats(k),tr=document.createElement('tr');
   for(let v of [NAMES[k],s.played,s.won,s.played?Math.round(100*s.won/s.played)+'%':'–',s.best?fmt(s.best):'–',s.streak]){let td=document.createElement('td');td.textContent=v;tr.append(td)}body.append(tr)}
   $('s-dstreak').textContent=currentStreak();$('s-dbest').textContent=daily.best;$('s-dtotal').textContent=Object.keys(daily.done).length;
   $('reset-stats').textContent='Reset stats';$('reset-stats').dataset.armed='';openOverlay('stats-screen')}
-function showSettings(){$('s-theme').value=settings.theme;for(let k of ['limit','timer','highlight','autoclear'])$('s-'+k).checked=settings[k];openOverlay('settings-screen')}
+function showSettings(){[...$('s-theme').children].forEach(b=>b.classList.toggle('on',b.dataset.v===settings.theme));for(let k of ['limit','timer','highlight','autoclear','haptics'])$('s-'+k).checked=settings[k];openOverlay('settings-screen')}
 function applyTheme(){let t=settings.theme==='system'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):settings.theme;document.documentElement.dataset.theme=t}
 
 /* ---------- wiring ---------- */
-for(let n=1;n<=9;n++){let b=document.createElement('button');b.textContent=n;b.onclick=()=>enter(n);$('numbers').append(b)}
-$('erase').onclick=()=>enter(0);$('notes').onclick=()=>{notesMode=!notesMode;draw()};$('autonotes').onclick=autoNotes;
-$('hint').onclick=()=>{if(done||paused||!hints)return;let i=selected>=0&&!puzzle[selected]&&values[selected]!==solution[selected]?selected:values.findIndex((v,j)=>!puzzle[j]&&v!==solution[j]);if(i<0)return;snapshot();selected=i;values[i]=solution[i];pencils[i].clear();if(settings.autoclear)for(let p of peers(i))pencils[p].delete(solution[i]);hints--;message('Hint: the correct number is '+solution[i]);checkWin();draw()};
-$('undo').onclick=()=>{if(paused||won)return;let h=history.pop();if(!h)return;values=h.values;pencils=h.pencils.map(x=>new Set(x));mistakes=h.mistakes;hints=h.hints;done=false;message('Last move undone');draw()};
+buildBoard();
+for(let n=1;n<=9;n++){let b=document.createElement('button');b.innerHTML='<b>'+n+'</b><small></small>';b.setAttribute('aria-label','Enter '+n);b.onclick=()=>enter(n);$('numbers').append(b)}
+$('erase').onclick=()=>enter(0);$('notes').onclick=()=>{notesMode=!notesMode;draw();buzz(5)};$('autonotes').onclick=autoNotes;
+$('hint').onclick=()=>{if(done||paused)return;if(!hints){message('No hints left for this puzzle');return}let i=selected>=0&&!puzzle[selected]&&values[selected]!==solution[selected]?selected:values.findIndex((v,j)=>!puzzle[j]&&v!==solution[j]);if(i<0)return;snapshot();selected=i;values[i]=solution[i];pencils[i].clear();if(settings.autoclear)for(let p of peers(i))pencils[p].delete(solution[i]);hints--;message('Hint used. '+(hints?hints+' left':'No hints left'));draw();animate(cells[i],'pop');animate(cells[i],'flash');celebrateUnits(i);checkWin()};
+$('undo').onclick=()=>{if(paused||won)return;let h=history.pop();if(!h){message('Nothing to undo');return}values=h.values;pencils=h.pencils.map(x=>new Set(x));mistakes=h.mistakes;hints=h.hints;done=false;message('');draw();if(selected>=0)animate(cells[selected],'pop')};
 $('new').onclick=fresh;$('restart').onclick=()=>{recordAbandon();reset()};$('difficulty').onchange=fresh;
-$('pause').onclick=()=>{if(done)return;paused=true;$('pause-screen').classList.add('show');store()};$('resume').onclick=resume;
-$('daily-btn').onclick=showDaily;$('stats-btn').onclick=showStats;$('settings-btn').onclick=showSettings;
+$('pause').onclick=()=>{if(done)return;paused=true;showPause();store()};$('resume').onclick=resume;
+$('daily-btn').onclick=showDaily;$('daily-pill').onclick=showDaily;$('stats-btn').onclick=showStats;$('settings-btn').onclick=showSettings;
 $('daily-play').onclick=()=>{let t=dayKey();if(gameMode==='daily'&&dailyDate===t&&!won)closeOverlays();else startDaily(daily.done[t]!=null)};
 $('daily-classic').onclick=backToClassic;$('win-new').onclick=fresh;
 $('reset-stats').onclick=e=>{let b=e.currentTarget;if(!b.dataset.armed){b.dataset.armed='1';b.textContent='Tap again to reset';return}stats={};daily={last:'',streak:0,best:0,done:{}};save('sudoku-stats',stats);save('sudoku-daily-log',daily);showStats()};
 document.querySelectorAll('.overlay .close').forEach(b=>b.onclick=closeOverlays);
 document.querySelectorAll('.overlay').forEach(o=>o.onclick=e=>{if(e.target===o&&o.id!=='pause-screen')closeOverlays()});
-$('s-theme').onchange=e=>{settings.theme=e.target.value;save('sudoku-settings',settings);applyTheme()};
-for(let k of ['limit','timer','highlight','autoclear'])$('s-'+k).onchange=e=>{settings[k]=e.target.checked;save('sudoku-settings',settings);
-  if(k==='limit'&&!settings.limit&&done&&!won){done=false;message('Mistake limit off — keep going!')}
-  if(k==='limit'&&settings.limit&&!done&&mistakes>=3){done=true;message('✕ GAME OVER — 3 mistakes. Undo or start again.',true)}draw()};
+[...$('s-theme').children].forEach(b=>b.onclick=()=>{settings.theme=b.dataset.v;save('sudoku-settings',settings);applyTheme();showSettings()});
+for(let k of ['limit','timer','highlight','autoclear','haptics'])$('s-'+k).onchange=e=>{settings[k]=e.target.checked;save('sudoku-settings',settings);
+  if(k==='limit'&&!settings.limit&&done&&!won){done=false;message('Mistake limit is off. Keep going.')}
+  if(k==='limit'&&settings.limit&&!done&&mistakes>=3){done=true;message('Three mistakes. Undo the last move or start again.',true)}
+  if(k==='haptics'&&settings.haptics)buzz(15);draw()};
 matchMedia('(prefers-color-scheme: light)').addEventListener?.('change',applyTheme);applyTheme();
 
 /* ---------- start ---------- */
 let mode=load('sudoku-mode',{}).mode;
-if(!applyState(load(mode==='daily'?'sudoku-daily':'sudoku-save',null))){gameMode='classic';generate($('difficulty').value);reset()}
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&!done){paused=true;$('pause-screen').classList.add('show');store()}});
-setInterval(()=>{if(!done&&!paused&&!overlayOpen()){seconds++;$('time').textContent=fmt(seconds);store()}},1000);
+document.fonts.ready.then(()=>{if(!applyState(load(mode==='daily'?'sudoku-daily':'sudoku-save',null))){gameMode='classic';generate($('difficulty').value);reset()}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&!done&&solution.length){paused=true;showPause();store()}});
+setInterval(()=>{if(!done&&!paused&&!overlayOpen()&&solution.length){seconds++;$('time').textContent=fmt(seconds);store()}},1000);
 })();</script></body></html>

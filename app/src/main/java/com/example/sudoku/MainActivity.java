@@ -19,7 +19,10 @@ public class MainActivity extends Activity {
   @Override public void onCreate(Bundle state) {
     super.onCreate(state);
     immersive();
+    getWindow().getDecorView().setBackgroundColor(0xFF0D1A2E);
     web=new WebView(this);
+    web.setBackgroundColor(0xFF0D1A2E);
+    web.setOverScrollMode(View.OVER_SCROLL_NEVER);
     web.setWebViewClient(new WebViewClient());
     WebSettings s=web.getSettings();
     s.setJavaScriptEnabled(true);
