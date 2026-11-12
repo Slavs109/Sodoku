@@ -1,45 +1,184 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Sudoku</title>
 <style>
-:root{color-scheme:dark}*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:#0c1524;color:#f1f4fa;font-family:system-ui,-apple-system,sans-serif}
+:root{--bg:#0c1524;--fg:#f1f4fa;--accent:#e7c58a;--btn:#22354b;--btn-fg:#fff;--btn-border:#536780;--muted:#c3d1e4;--frame:#d4b77d;--cell:#18273a;--cell-fg:#f6f8fb;--grid:#4b5d74;--grid-strong:#b5c3d7;--user:#8ecaff;--related:#273c53;--same:#31587c;--active:#376a97;--ring:#c1e6ff;--pencil:#b5c8df;--num:#9bd4ff;--toggle:#276da5;--toggle-border:#a4dcff;--primary:#286b9f;--primary-border:#5ba5df;--overlay:#0a1325f2;--panel:#13213a;--good:#7fdc9c;color-scheme:dark}
+:root[data-theme=light]{--bg:#eef2f7;--fg:#1b2533;--accent:#8f6216;--btn:#fff;--btn-fg:#1b2533;--btn-border:#b4c0cf;--muted:#4a5a70;--frame:#8a6a2e;--cell:#fff;--cell-fg:#1b2533;--grid:#c9d2dd;--grid-strong:#52627a;--user:#1f6fc0;--related:#e4ecf6;--same:#c4daf2;--active:#a7cbf0;--ring:#1f6fc0;--pencil:#56677e;--num:#1f6fc0;--toggle:#cfe4fa;--toggle-border:#1f6fc0;--primary:#2a73b0;--primary-border:#1d5a8d;--overlay:#eef2f7f2;--panel:#fff;--good:#1d8a45;color-scheme:light}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,sans-serif}
 main{max-width:580px;height:100dvh;margin:auto;padding:12px 12px 18px;display:flex;flex-direction:column;gap:10px;justify-content:space-between}
-header,.status,.tools,.actions{display:flex;justify-content:space-between;align-items:center;gap:8px}h1{font-size:26px;margin:0;color:#e7c58a}button,select{background:#22354b;color:#fff;border:1px solid #536780;border-radius:10px;padding:10px;font:inherit}button:active{transform:scale(.97)}button:focus-visible{outline:2px solid #f2cc83}select{max-width:140px}.status{font-size:13px;color:#c3d1e4}.status strong{color:#fff}
-#board{width:min(100%,calc(100dvh - 310px));max-width:500px;aspect-ratio:1;display:grid;grid-template-columns:repeat(9,1fr);align-self:center;border:3px solid #d4b77d;border-radius:5px;overflow:hidden;box-shadow:0 8px 25px #0007}
-.cell{border:0;border-right:1px solid #4b5d74;border-bottom:1px solid #4b5d74;border-radius:0;background:#18273a;color:#f6f8fb;font-size:clamp(15px,5vw,27px);font-weight:750;padding:0;min-width:0}
-.cell:nth-child(3n){border-right:2px solid #b5c3d7}.cell:nth-child(9n){border-right:0}.cell:nth-child(n+19):nth-child(-n+27),.cell:nth-child(n+46):nth-child(-n+54){border-bottom:2px solid #b5c3d7}.cell:nth-child(n+73){border-bottom:0}
-.cell.user{color:#8ecaff}.cell.related{background:#273c53}.cell.same{background:#31587c}.cell.active{background:#376a97;box-shadow:inset 0 0 0 2px #c1e6ff}.cell.wrong{background:#98263c!important;color:#fff!important;box-shadow:inset 0 0 0 2px #ff8a99}
-.pencil{display:grid;grid-template-columns:repeat(3,1fr);width:100%;height:100%;align-items:center;color:#b5c8df;font-size:clamp(7px,1.8vw,11px)}
-#message{min-height:25px;text-align:center;font-size:13px;color:#aebfd5;padding:4px}#message.error{background:#a11e34;border:2px solid #ff8d9b;color:#fff;border-radius:10px;padding:9px;font-weight:800;font-size:15px}
-#numbers{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}#numbers button{padding:12px 0;font-size:clamp(18px,5vw,24px);font-weight:750;color:#9bd4ff}#numbers button.hidden{visibility:hidden;pointer-events:none}
-.tools button{flex:1;font-size:13px;padding:11px 3px}.tools button.active{background:#276da5;border-color:#a4dcff}.actions button{flex:1}#new{background:#286b9f;border-color:#5ba5df}
-#pause-screen{display:none;position:fixed;inset:0;background:#0a1325f5;z-index:5;align-items:center;justify-content:center;flex-direction:column;gap:18px}#pause-screen.show{display:flex}
-@media(max-height:650px){main{gap:4px;padding:5px 10px}h1{font-size:21px}#board{width:min(100%,calc(100dvh - 245px))}.tools button,.actions button{padding:6px 3px}#numbers button{padding:6px 0}.status{font-size:11px}}
+header,.status,.tools,.actions,.head-btns{display:flex;justify-content:space-between;align-items:center;gap:8px}.head-btns{gap:6px}
+h1{font-size:23px;margin:0;color:var(--accent)}
+button,select{background:var(--btn);color:var(--btn-fg);border:1px solid var(--btn-border);border-radius:10px;padding:10px;font:inherit}button:active{transform:scale(.97)}button:focus-visible,select:focus-visible{outline:2px solid var(--accent)}
+.head-btns button{padding:7px 9px;font-size:17px;line-height:1.1}select{max-width:112px}
+.status{font-size:13px;color:var(--muted)}.status strong{color:var(--fg)}#mode{font-weight:700;color:var(--accent)}#time.off{visibility:hidden}
+#board{width:min(100%,calc(100dvh - 310px));max-width:500px;aspect-ratio:1;display:grid;grid-template-columns:repeat(9,1fr);align-self:center;border:3px solid var(--frame);border-radius:5px;overflow:hidden;box-shadow:0 8px 25px #0005}
+.cell{border:0;border-right:1px solid var(--grid);border-bottom:1px solid var(--grid);border-radius:0;background:var(--cell);color:var(--cell-fg);font-size:clamp(15px,5vw,27px);font-weight:750;padding:0;min-width:0}
+.cell:nth-child(3n){border-right:2px solid var(--grid-strong)}.cell:nth-child(9n){border-right:0}.cell:nth-child(n+19):nth-child(-n+27),.cell:nth-child(n+46):nth-child(-n+54){border-bottom:2px solid var(--grid-strong)}.cell:nth-child(n+73){border-bottom:0}
+.cell.user{color:var(--user)}.cell.related{background:var(--related)}.cell.same{background:var(--same)}.cell.active{background:var(--active);box-shadow:inset 0 0 0 2px var(--ring)}.cell.wrong{background:#98263c!important;color:#fff!important;box-shadow:inset 0 0 0 2px #ff8a99}
+.pencil{display:grid;grid-template-columns:repeat(3,1fr);width:100%;height:100%;align-items:center;color:var(--pencil);font-size:clamp(7px,1.8vw,11px)}
+#message{min-height:25px;text-align:center;font-size:13px;color:var(--muted);padding:4px}#message.error{background:#a11e34;border:2px solid #ff8d9b;color:#fff;border-radius:10px;padding:9px;font-weight:800;font-size:15px}
+#numbers{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}#numbers button{padding:12px 0;font-size:clamp(18px,5vw,24px);font-weight:750;color:var(--num)}#numbers button.hidden{visibility:hidden;pointer-events:none}
+.tools button{flex:1;font-size:13px;padding:11px 2px}.tools button.active{background:var(--toggle);border-color:var(--toggle-border)}.actions button{flex:1}
+#new,.primary{background:var(--primary);border-color:var(--primary-border);color:#fff}
+.overlay{display:none;position:fixed;inset:0;background:var(--overlay);z-index:5;align-items:center;justify-content:center;padding:16px}.overlay.show{display:flex}
+#pause-screen{flex-direction:column;gap:18px}
+.panel{width:min(100%,420px);max-height:100%;overflow:auto;background:var(--panel);border:1px solid var(--btn-border);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 12px 40px #0006}
+.panel h2{margin:0;color:var(--accent);font-size:22px}.panel h3{margin:4px 0 0;font-size:15px;color:var(--muted)}.panel p{margin:0;color:var(--muted);line-height:1.4}.center{text-align:center}
+.row-btns{display:flex;gap:8px}.row-btns button{flex:1}
+.big-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;font-size:12px;color:var(--muted)}.big-stats div{background:var(--btn);border:1px solid var(--btn-border);border-radius:10px;padding:8px 4px}.big-stats b{display:block;font-size:22px;color:var(--accent)}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:7px 4px;text-align:right;border-bottom:1px solid var(--grid)}th{color:var(--muted);font-weight:600;font-size:12px}th:first-child,td:first-child{text-align:left}
+label.setting{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:4px 0;font-size:15px}label.setting small{display:block;color:var(--muted);font-size:12px}
+input[type=checkbox]{width:22px;height:22px;flex:none;accent-color:var(--primary)}.good{color:var(--good);font-weight:700}
+@media(max-height:650px){main{gap:4px;padding:5px 10px}h1{font-size:20px}#board{width:min(100%,calc(100dvh - 245px))}.tools button,.actions button{padding:6px 2px}#numbers button{padding:6px 0}.status{font-size:11px}.head-btns button{padding:5px 7px}}
 </style></head><body><main>
-<header><h1>Sudoku</h1><select id="difficulty" aria-label="Difficulty"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option><option value="expert">Expert</option><option value="master">Master</option></select></header>
-<div class="status"><span id="time">00:00</span><span id="mistakes">Mistakes 0/3</span><button id="pause">Pause</button></div>
+<header><h1>Sudoku</h1><div class="head-btns"><button id="daily-btn" aria-label="Daily challenge">📅</button><button id="stats-btn" aria-label="Statistics">📊</button><button id="settings-btn" aria-label="Settings">⚙️</button><select id="difficulty" aria-label="Difficulty"><option value="easy">Easy</option><option value="medium" selected>Medium</option><option value="hard">Hard</option><option value="expert">Expert</option><option value="master">Master</option></select></div></header>
+<div class="status"><span id="mode">Medium</span><span id="time">00:00</span><span id="mistakes">Mistakes 0/3</span><button id="pause">Pause</button></div>
 <div id="board" aria-label="Sudoku puzzle"></div><div id="message" role="status" aria-live="polite">Select a square to begin</div>
 <div id="numbers" aria-label="Number keypad"></div>
-<div class="tools"><button id="erase">Erase</button><button id="notes">Notes</button><button id="hint">Hint (3)</button><button id="undo">Undo</button></div>
+<div class="tools"><button id="erase">Erase</button><button id="notes">Notes</button><button id="autonotes">Auto</button><button id="hint">Hint (3)</button><button id="undo">Undo</button></div>
 <div class="actions"><button id="new">New puzzle</button><button id="restart">Restart</button></div>
-</main><div id="pause-screen"><h2>Game paused</h2><button id="resume">Resume</button></div>
+</main>
+<div id="pause-screen" class="overlay"><h2>Game paused</h2><button id="resume" class="primary">Resume</button></div>
+<div id="win-screen" class="overlay"><div class="panel center"><h2 id="win-title">Puzzle complete!</h2><p id="win-detail"></p><div class="row-btns"><button class="close">View board</button><button id="win-new" class="primary">New puzzle</button></div></div></div>
+<div id="daily-screen" class="overlay"><div class="panel"><h2>Daily challenge</h2><p id="daily-info"></p>
+<div class="big-stats"><div><b id="d-streak">0</b>Current streak</div><div><b id="d-best">0</b>Best streak</div><div><b id="d-total">0</b>Completed</div></div>
+<button id="daily-play" class="primary">Play today's puzzle</button><button id="daily-classic">Back to classic game</button><button class="close">Close</button></div></div>
+<div id="stats-screen" class="overlay"><div class="panel"><h2>Statistics</h2>
+<table><thead><tr><th>Level</th><th>Played</th><th>Won</th><th>Win %</th><th>Best</th><th>Streak</th></tr></thead><tbody id="stats-body"></tbody></table>
+<h3>Daily challenge</h3><div class="big-stats"><div><b id="s-dstreak">0</b>Current streak</div><div><b id="s-dbest">0</b>Best streak</div><div><b id="s-dtotal">0</b>Completed</div></div>
+<div class="row-btns"><button id="reset-stats">Reset stats</button><button class="close primary">Close</button></div></div></div>
+<div id="settings-screen" class="overlay"><div class="panel"><h2>Settings</h2>
+<label class="setting">Theme<select id="s-theme"><option value="system">System</option><option value="dark">Dark</option><option value="light">Light</option></select></label>
+<label class="setting"><span>Mistake limit<small>Game over after 3 mistakes</small></span><input type="checkbox" id="s-limit"></label>
+<label class="setting"><span>Show timer</span><input type="checkbox" id="s-timer"></label>
+<label class="setting"><span>Highlight matching numbers</span><input type="checkbox" id="s-highlight"></label>
+<label class="setting"><span>Smart notes<small>Placing a number clears it from notes in the same row, column and box</small></span><input type="checkbox" id="s-autoclear"></label>
+<button class="close primary">Done</button></div></div>
 <script>
 (()=>{'use strict';const $=id=>document.getElementById(id);
-let solution=[],puzzle=[],values=[],pencils=[],selected=-1,mistakes=0,hints=3,seconds=0,notesMode=false,done=false,paused=false,history=[],difficulty='medium';
-function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+const LEVELS=['easy','medium','hard','expert','master'],NAMES={easy:'Easy',medium:'Medium',hard:'Hard',expert:'Expert',master:'Master'};
+const DAILY_LEVELS=['hard','easy','easy','medium','medium','hard','expert']; // Sunday..Saturday
+function load(k,d){try{let v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+let settings=Object.assign({theme:'system',limit:true,timer:true,highlight:true,autoclear:true},load('sudoku-settings',{}));
+let stats=load('sudoku-stats',{});
+let daily=Object.assign({last:'',streak:0,best:0,done:{}},load('sudoku-daily-log',{}));
+let solution=[],puzzle=[],values=[],pencils=[],selected=-1,mistakes=0,hints=3,seconds=0,notesMode=false,done=false,won=false,paused=false,history=[],difficulty='medium',gameMode='classic',dailyDate='';
+let rand=Math.random;
+
+/* ---------- helpers ---------- */
+const fmt=s=>String(s/60|0).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+const dayKey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const parseDay=k=>new Date(k+'T12:00:00');
+function shiftDay(k,n){let d=parseDay(k);d.setDate(d.getDate()+n);return dayKey(d)}
+const dailyLevel=k=>DAILY_LEVELS[parseDay(k).getDay()];
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function seeded(a){return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function peers(i){let r=i/9|0,c=i%9,br=(r/3|0)*3,bc=(c/3|0)*3,out=new Set;for(let k=0;k<9;k++){out.add(r*9+k);out.add(k*9+c);out.add((br+(k/3|0))*9+bc+k%3)}out.delete(i);return out}
+
+/* ---------- puzzle generation ---------- */
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=rand()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
 function candidates(a,i){let r=i/9|0,c=i%9,used=new Set;for(let k=0;k<9;k++){used.add(a[r*9+k]);used.add(a[k*9+c]);used.add(a[(r/3|0)*27+(c/3|0)*3+(k/3|0)*9+k%3])}return [1,2,3,4,5,6,7,8,9].filter(n=>!used.has(n))}
 function solve(a,randomize=false){let best=-1,opts;for(let i=0;i<81;i++)if(!a[i]){let c=candidates(a,i);if(!c.length)return false;if(!opts||c.length<opts.length){best=i;opts=c;if(c.length===1)break}}if(best<0)return true;if(randomize)shuffle(opts);for(let n of opts){a[best]=n;if(solve(a,randomize))return true}a[best]=0;return false}
 function countSolutions(a,limit=2){let best=-1,opts;for(let i=0;i<81;i++)if(!a[i]){let c=candidates(a,i);if(!c.length)return 0;if(!opts||c.length<opts.length){best=i;opts=c;if(c.length===1)break}}if(best<0)return 1;let total=0;for(let n of opts){a[best]=n;total+=countSolutions(a,limit-total);if(total>=limit)break}a[best]=0;return total}
-function store(){localStorage.setItem('sudoku-save',JSON.stringify({solution,puzzle,values,pencils:pencils.map(x=>[...x]),selected,mistakes,hints,seconds,notesMode,done,paused,difficulty,gameMode:'classic'}))}
-function draw(){let board=$('board');board.replaceChildren();for(let i=0;i<81;i++){let b=document.createElement('button');b.className='cell';let r=i/9|0,c=i%9;if(!puzzle[i]&&values[i])b.classList.add('user');if(selected>=0){let sr=selected/9|0,sc=selected%9;if(r===sr||c===sc||(r/3|0)===(sr/3|0)&&(c/3|0)===(sc/3|0))b.classList.add('related');if(values[i]&&values[i]===values[selected])b.classList.add('same');if(i===selected)b.classList.add('active')}if(values[i]&&values[i]!==solution[i])b.classList.add('wrong');if(values[i])b.textContent=values[i];else if(pencils[i].size){let p=document.createElement('div');p.className='pencil';for(let n=1;n<=9;n++){let sp=document.createElement('span');sp.textContent=pencils[i].has(n)?n:'';p.append(sp)}b.append(p)}b.setAttribute('aria-label','Row '+(r+1)+' column '+(c+1)+(values[i]?', '+values[i]:', empty'));b.onclick=()=>{if(paused||done)return;selected=i;draw()};board.append(b)}
-for(let n=1;n<=9;n++){let btn=$('numbers').children[n-1];let complete=values.filter(v=>v===n).length>=9;btn.classList.toggle('hidden',complete);btn.disabled=complete}
-$('mistakes').textContent='Mistakes '+mistakes+'/3';$('hint').textContent='Hint ('+hints+')';$('notes').classList.toggle('active',notesMode);$('time').textContent=String(seconds/60|0).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');store()}
+function generate(level,rng){rand=rng||Math.random;difficulty=level;solution=Array(81).fill(0);solve(solution,true);puzzle=solution.slice();let target={easy:38,medium:47,hard:53,expert:56,master:58}[level],removed=0;for(let i of shuffle([...Array(81).keys()])){if(removed>=target)break;let old=puzzle[i];puzzle[i]=0;if(countSolutions(puzzle.slice())!==1)puzzle[i]=old;else removed++}rand=Math.random}
+
+/* ---------- save / restore ---------- */
+function store(){save(gameMode==='daily'?'sudoku-daily':'sudoku-save',{solution,puzzle,values,pencils:pencils.map(x=>[...x]),selected,mistakes,hints,seconds,notesMode,done,won,paused,difficulty,gameMode,dailyDate});save('sudoku-mode',{mode:gameMode})}
+function applyState(s){
+  const ok=a=>Array.isArray(a)&&a.length===81;
+  if(!s||!ok(s.solution)||!ok(s.puzzle)||!ok(s.values))return false;
+  solution=s.solution;puzzle=s.puzzle;values=s.values;pencils=Array.from({length:81},(_,i)=>new Set(s.pencils&&s.pencils[i]||[]));
+  selected=Number.isInteger(s.selected)?s.selected:-1;mistakes=s.mistakes||0;hints=s.hints??3;seconds=s.seconds||0;notesMode=!!s.notesMode;done=!!s.done;paused=!!s.paused;
+  won=!!s.won||values.every((v,i)=>v===solution[i]);difficulty=LEVELS.includes(s.difficulty)?s.difficulty:'medium';
+  gameMode=s.gameMode==='daily'?'daily':'classic';dailyDate=s.dailyDate||'';history=[];
+  if(gameMode==='classic')$('difficulty').value=difficulty;
+  closeOverlays();$('pause-screen').classList.toggle('show',paused);
+  message(won?'Puzzle complete! Great job.':'Select a square to begin');draw();return true}
+
+/* ---------- stats ---------- */
+function levelStats(k){return stats[k]||(stats[k]={played:0,won:0,best:0,streak:0,bestStreak:0})}
+function hasProgress(){return mistakes>0||values.some((v,i)=>v&&!puzzle[i])}
+function recordAbandon(){if(gameMode!=='classic'||won||!hasProgress())return;let s=levelStats(difficulty);s.played++;s.streak=0;save('sudoku-stats',stats)}
+function recordWin(){ // returns detail text for the win screen
+  if(gameMode==='daily'){
+    if(daily.done[dailyDate]!=null)return 'Solved again in '+fmt(seconds)+'.';
+    daily.done[dailyDate]=seconds;
+    if(dailyDate>daily.last){daily.streak=daily.last===shiftDay(dailyDate,-1)?daily.streak+1:1;daily.last=dailyDate}
+    daily.best=Math.max(daily.best,daily.streak);save('sudoku-daily-log',daily);
+    return 'Solved in '+fmt(seconds)+'. Daily streak: '+currentStreak()+(currentStreak()===1?' day':' days')+' 🔥'}
+  let s=levelStats(difficulty),record=!s.best||seconds<s.best;
+  s.played++;s.won++;s.streak++;s.bestStreak=Math.max(s.bestStreak,s.streak);if(record)s.best=seconds;save('sudoku-stats',stats);
+  return NAMES[difficulty]+' solved in '+fmt(seconds)+' with '+mistakes+(mistakes===1?' mistake':' mistakes')+'.'+(record?' 🏆 New best time!':' Best: '+fmt(s.best))}
+function currentStreak(){let t=dayKey();return daily.last===t||daily.last===shiftDay(t,-1)?daily.streak:0}
+
+/* ---------- drawing ---------- */
+function draw(){let board=$('board');board.replaceChildren();for(let i=0;i<81;i++){let b=document.createElement('button');b.className='cell';let r=i/9|0,c=i%9;if(!puzzle[i]&&values[i])b.classList.add('user');if(selected>=0){let sr=selected/9|0,sc=selected%9;if(r===sr||c===sc||(r/3|0)===(sr/3|0)&&(c/3|0)===(sc/3|0))b.classList.add('related');if(settings.highlight&&values[i]&&values[i]===values[selected])b.classList.add('same');if(i===selected)b.classList.add('active')}if(values[i]&&values[i]!==solution[i])b.classList.add('wrong');if(values[i])b.textContent=values[i];else if(pencils[i].size){let p=document.createElement('div');p.className='pencil';for(let n=1;n<=9;n++){let sp=document.createElement('span');sp.textContent=pencils[i].has(n)?n:'';p.append(sp)}b.append(p)}b.setAttribute('aria-label','Row '+(r+1)+' column '+(c+1)+(values[i]?', '+values[i]:', empty'));b.onclick=()=>{if(paused||done||overlayOpen())return;selected=i;draw()};board.append(b)}
+  for(let n=1;n<=9;n++){let btn=$('numbers').children[n-1];let complete=values.filter(v=>v===n).length>=9;btn.classList.toggle('hidden',complete);btn.disabled=complete}
+  $('mode').textContent=(gameMode==='daily'?'Daily · ':'')+NAMES[difficulty];
+  $('mistakes').textContent='Mistakes '+mistakes+(settings.limit?'/3':'');$('hint').textContent='Hint ('+hints+')';$('notes').classList.toggle('active',notesMode);
+  $('time').textContent=fmt(seconds);$('time').classList.toggle('off',!settings.timer);store()}
 function message(t,error=false){$('message').textContent=t;$('message').classList.toggle('error',error)}
+
+/* ---------- gameplay ---------- */
 function snapshot(){history.push({values:values.slice(),pencils:pencils.map(x=>[...x]),mistakes,hints});if(history.length>100)history.shift()}
-function checkWin(){if(values.every((v,i)=>v===solution[i])){done=true;message('Puzzle complete! Great job.');return true}return false}
-function enter(n){if(paused||done||selected<0||puzzle[selected])return;if(notesMode&&n){snapshot();pencils[selected].has(n)?pencils[selected].delete(n):pencils[selected].add(n);message('');draw();return}if(values[selected]===n)return;snapshot();values[selected]=n;pencils[selected].clear();if(n&&n!==solution[selected]){mistakes++;message('✕ WRONG NUMBER — '+n+' is incorrect!',true);if(navigator.vibrate)navigator.vibrate(90)}else message('');if(mistakes>=3){done=true;message('✕ GAME OVER — 3 mistakes. Undo or start again.',true)}else checkWin();draw()}
-function reset(){values=puzzle.slice();pencils=Array.from({length:81},()=>new Set);selected=-1;mistakes=0;hints=3;seconds=0;notesMode=false;done=false;paused=false;history=[];$('pause-screen').classList.remove('show');message('Select a square to begin');draw()}
-function fresh(){difficulty=$('difficulty').value;solution=Array(81).fill(0);solve(solution,true);puzzle=solution.slice();let target={easy:38,medium:47,hard:53,expert:56,master:58}[difficulty],removed=0;for(let i of shuffle([...Array(81).keys()])){if(removed>=target)break;let old=puzzle[i];puzzle[i]=0;if(countSolutions(puzzle.slice())!==1)puzzle[i]=old;else removed++}reset()}
+function checkWin(){if(values.every((v,i)=>v===solution[i])){done=true;won=true;selected=-1;message('Puzzle complete! Great job.');let detail=recordWin();$('win-title').textContent=gameMode==='daily'?'Daily challenge complete!':'Puzzle complete!';$('win-detail').textContent=detail;openOverlay('win-screen');return true}return false}
+function enter(n){if(paused||done||selected<0||puzzle[selected])return;
+  if(notesMode&&n){snapshot();pencils[selected].has(n)?pencils[selected].delete(n):pencils[selected].add(n);message('');draw();return}
+  if(values[selected]===n)return;snapshot();values[selected]=n;pencils[selected].clear();
+  if(n&&n!==solution[selected]){mistakes++;message('✕ WRONG NUMBER — '+n+' is incorrect!',true);if(navigator.vibrate)navigator.vibrate(90)}
+  else{message('');if(n&&settings.autoclear)for(let p of peers(selected))pencils[p].delete(n)}
+  if(settings.limit&&mistakes>=3){done=true;message('✕ GAME OVER — 3 mistakes. Undo or start again.',true)}else checkWin();draw()}
+function autoNotes(){if(paused||done)return;snapshot();let filled=0;for(let i=0;i<81;i++)if(!values[i]){pencils[i]=new Set(candidates(values,i));filled++}message(filled?'Notes filled in for every empty square':'');draw()}
+function reset(){values=puzzle.slice();pencils=Array.from({length:81},()=>new Set);selected=-1;mistakes=0;hints=3;seconds=0;notesMode=false;done=false;won=false;paused=false;history=[];closeOverlays();message(gameMode==='daily'?'Daily challenge — '+NAMES[difficulty]:'Select a square to begin');draw()}
+function fresh(){recordAbandon();gameMode='classic';dailyDate='';generate($('difficulty').value);reset()}
+function startDaily(replay=false){let t=dayKey();store(); // classic and daily games have separate save slots, so switching never loses progress
+  if(!replay&&applyState(load('sudoku-daily',null))&&gameMode==='daily'&&dailyDate===t){closeOverlays();$('pause-screen').classList.toggle('show',paused);return}
+  gameMode='daily';dailyDate=t;generate(dailyLevel(t),seeded(hash('sudoku-daily-'+t)));reset()}
+function backToClassic(){let s=load('sudoku-save',null);if(!(s&&applyState(Object.assign(s,{gameMode:'classic'})))){gameMode='classic';dailyDate='';generate($('difficulty').value);reset()}closeOverlays();$('pause-screen').classList.toggle('show',paused)}
+
+/* ---------- overlays ---------- */
+const overlayOpen=()=>!!document.querySelector('.overlay.show');
+function openOverlay(id){$(id).classList.add('show')}
+function closeOverlays(){document.querySelectorAll('.overlay.show').forEach(o=>{if(o.id!=='pause-screen')o.classList.remove('show')})}
+function resume(){paused=false;$('pause-screen').classList.remove('show');store()}
+window.sudokuNavigate=()=>{ // called by the Android back button; returns true if it handled the press
+  let open=[...document.querySelectorAll('.overlay.show')];if(!open.length)return false;
+  if(open.some(o=>o.id!=='pause-screen'))closeOverlays();else resume();return true};
+function showDaily(){let t=dayKey(),solved=daily.done[t];
+  $('daily-info').innerHTML='';let info=$('daily-info');info.append(parseDay(t).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+' · '+NAMES[dailyLevel(t)]);
+  if(solved!=null){let s=document.createElement('span');s.className='good';s.textContent=' — solved in '+fmt(solved)+' ✓';info.append(s)}
+  $('d-streak').textContent=currentStreak();$('d-best').textContent=daily.best;$('d-total').textContent=Object.keys(daily.done).length;
+  let playingToday=gameMode==='daily'&&dailyDate===t;
+  $('daily-play').textContent=playingToday&&!won?'Continue today\'s puzzle':solved!=null?'Play again':'Play today\'s puzzle';
+  $('daily-classic').style.display=gameMode==='daily'?'':'none';openOverlay('daily-screen')}
+function showStats(){let body=$('stats-body');body.replaceChildren();for(let k of LEVELS){let s=levelStats(k),tr=document.createElement('tr');
+  for(let v of [NAMES[k],s.played,s.won,s.played?Math.round(100*s.won/s.played)+'%':'–',s.best?fmt(s.best):'–',s.streak]){let td=document.createElement('td');td.textContent=v;tr.append(td)}body.append(tr)}
+  $('s-dstreak').textContent=currentStreak();$('s-dbest').textContent=daily.best;$('s-dtotal').textContent=Object.keys(daily.done).length;
+  $('reset-stats').textContent='Reset stats';$('reset-stats').dataset.armed='';openOverlay('stats-screen')}
+function showSettings(){$('s-theme').value=settings.theme;for(let k of ['limit','timer','highlight','autoclear'])$('s-'+k).checked=settings[k];openOverlay('settings-screen')}
+function applyTheme(){let t=settings.theme==='system'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):settings.theme;document.documentElement.dataset.theme=t}
+
+/* ---------- wiring ---------- */
 for(let n=1;n<=9;n++){let b=document.createElement('button');b.textContent=n;b.onclick=()=>enter(n);$('numbers').append(b)}
-$('erase').onclick=()=>enter(0);$('notes').onclick=()=>{notesMode=!notesMode;draw()};$('hint').onclick=()=>{if(done||paused||!hints)return;let i=selected>=0&&!puzzle[selected]&&values[selected]!==solution[selected]?selected:values.findIndex((v,j)=>!puzzle[j]&&v!==solution[j]);if(i<0)return;snapshot();selected=i;values[i]=solution[i];pencils[i].clear();hints--;message('Hint: the correct number is '+solution[i]);checkWin();draw()};$('undo').onclick=()=>{if(paused)return;let h=history.pop();if(!h)return;values=h.values;pencils=h.pencils.map(x=>new Set(x));mistakes=h.mistakes;hints=h.hints;done=false;message('Last move undone');draw()};$('new').onclick=fresh;$('restart').onclick=reset;$('difficulty').onchange=fresh;$('pause').onclick=()=>{if(done)return;paused=true;$('pause-screen').classList.add('show');store()};$('resume').onclick=()=>{paused=false;$('pause-screen').classList.remove('show');store()};
-try{let saved=JSON.parse(localStorage.getItem('sudoku-save'));if(!saved||!Array.isArray(saved.solution)||saved.solution.length!==81||!Array.isArray(saved.puzzle)||saved.puzzle.length!==81||!Array.isArray(saved.values)||saved.values.length!==81)throw Error('invalid');solution=saved.solution;puzzle=saved.puzzle;values=saved.values;pencils=Array.from({length:81},(_,i)=>new Set(saved.pencils&&saved.pencils[i]||[]));selected=Number.isInteger(saved.selected)?saved.selected:-1;mistakes=saved.mistakes||0;hints=saved.hints??3;seconds=saved.seconds||0;notesMode=!!saved.notesMode;done=!!saved.done;paused=!!saved.paused;difficulty=saved.difficulty||'medium';$('difficulty').value=difficulty;$('pause-screen').classList.toggle('show',paused);draw()}catch(e){fresh()}
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&!done){paused=true;$('pause-screen').classList.add('show');store()}});setInterval(()=>{if(!done&&!paused){seconds++;$('time').textContent=String(seconds/60|0).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');store()}},1000);
+$('erase').onclick=()=>enter(0);$('notes').onclick=()=>{notesMode=!notesMode;draw()};$('autonotes').onclick=autoNotes;
+$('hint').onclick=()=>{if(done||paused||!hints)return;let i=selected>=0&&!puzzle[selected]&&values[selected]!==solution[selected]?selected:values.findIndex((v,j)=>!puzzle[j]&&v!==solution[j]);if(i<0)return;snapshot();selected=i;values[i]=solution[i];pencils[i].clear();if(settings.autoclear)for(let p of peers(i))pencils[p].delete(solution[i]);hints--;message('Hint: the correct number is '+solution[i]);checkWin();draw()};
+$('undo').onclick=()=>{if(paused||won)return;let h=history.pop();if(!h)return;values=h.values;pencils=h.pencils.map(x=>new Set(x));mistakes=h.mistakes;hints=h.hints;done=false;message('Last move undone');draw()};
+$('new').onclick=fresh;$('restart').onclick=()=>{recordAbandon();reset()};$('difficulty').onchange=fresh;
+$('pause').onclick=()=>{if(done)return;paused=true;$('pause-screen').classList.add('show');store()};$('resume').onclick=resume;
+$('daily-btn').onclick=showDaily;$('stats-btn').onclick=showStats;$('settings-btn').onclick=showSettings;
+$('daily-play').onclick=()=>{let t=dayKey();if(gameMode==='daily'&&dailyDate===t&&!won)closeOverlays();else startDaily(daily.done[t]!=null)};
+$('daily-classic').onclick=backToClassic;$('win-new').onclick=fresh;
+$('reset-stats').onclick=e=>{let b=e.currentTarget;if(!b.dataset.armed){b.dataset.armed='1';b.textContent='Tap again to reset';return}stats={};daily={last:'',streak:0,best:0,done:{}};save('sudoku-stats',stats);save('sudoku-daily-log',daily);showStats()};
+document.querySelectorAll('.overlay .close').forEach(b=>b.onclick=closeOverlays);
+document.querySelectorAll('.overlay').forEach(o=>o.onclick=e=>{if(e.target===o&&o.id!=='pause-screen')closeOverlays()});
+$('s-theme').onchange=e=>{settings.theme=e.target.value;save('sudoku-settings',settings);applyTheme()};
+for(let k of ['limit','timer','highlight','autoclear'])$('s-'+k).onchange=e=>{settings[k]=e.target.checked;save('sudoku-settings',settings);
+  if(k==='limit'&&!settings.limit&&done&&!won){done=false;message('Mistake limit off — keep going!')}
+  if(k==='limit'&&settings.limit&&!done&&mistakes>=3){done=true;message('✕ GAME OVER — 3 mistakes. Undo or start again.',true)}draw()};
+matchMedia('(prefers-color-scheme: light)').addEventListener?.('change',applyTheme);applyTheme();
+
+/* ---------- start ---------- */
+let mode=load('sudoku-mode',{}).mode;
+if(!applyState(load(mode==='daily'?'sudoku-daily':'sudoku-save',null))){gameMode='classic';generate($('difficulty').value);reset()}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&!done){paused=true;$('pause-screen').classList.add('show');store()}});
+setInterval(()=>{if(!done&&!paused&&!overlayOpen()){seconds++;$('time').textContent=fmt(seconds);store()}},1000);
 })();</script></body></html>

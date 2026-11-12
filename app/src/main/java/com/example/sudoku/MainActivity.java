@@ -33,7 +33,9 @@ public class MainActivity extends Activity {
   }
   @Override public void onBackPressed(){
     if(web!=null){
-      web.evaluateJavascript("(function(){if(typeof window.sudokuNavigate==='function'){window.sudokuNavigate('home');return true;}return false;})()",null);
+      web.evaluateJavascript(
+        "(function(){return typeof window.sudokuNavigate==='function'&&window.sudokuNavigate('home')===true;})()",
+        handled->{ if(!"true".equals(handled)) MainActivity.super.onBackPressed(); });
     }else super.onBackPressed();
   }
 }
