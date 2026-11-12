@@ -2,9 +2,19 @@
 <style>
 @font-face{font-family:Fraunces;src:url(fonts/fraunces-latin-opsz-normal.woff2) format('woff2');font-weight:100 900;font-style:normal;font-display:block}
 @font-face{font-family:Fraunces;src:url(fonts/fraunces-latin-opsz-italic.woff2) format('woff2');font-weight:100 900;font-style:italic;font-display:block}
+@font-face{font-family:Atkinson;src:url(fonts/atkinson.woff2) format('woff2');font-weight:200 800;font-display:block}
+@font-face{font-family:Lexend;src:url(fonts/lexend.woff2) format('woff2');font-weight:100 900;font-display:block}
+@font-face{font-family:Nunito;src:url(fonts/nunito.woff2) format('woff2');font-weight:200 1000;font-display:block}
+@font-face{font-family:SourceSerif;src:url(fonts/source-serif.woff2) format('woff2');font-weight:200 900;font-display:block}
 @font-face{font-family:Figtree;src:url(fonts/figtree-latin-wght-normal.woff2) format('woff2');font-weight:300 900;font-display:block}
-:root{--bg:#0d1a2e;--bg-glow:#17305a;--surface:#14243a;--surface-2:#1b2e48;--line:#2a3f5c;--line-strong:#6d7f98;--text:#eef2f8;--muted:#8fa3be;--brass:#d9b26a;--brass-deep:#a9843f;--ink:#8cc4ff;--related:#182a43;--same:#22426a;--active:#2b5182;--danger:#e5536b;--good:#6fd39a;--shadow:0 18px 40px #02081599;--scrim:#07101fcc;color-scheme:dark}
-:root[data-theme=light]{--bg:#e9edf3;--bg-glow:#f8fafc;--surface:#fff;--surface-2:#f1f4f8;--line:#d3dbe6;--line-strong:#5b6b83;--text:#15233a;--muted:#5d6e86;--brass:#9a6f22;--brass-deep:#7a5517;--ink:#1e5fb4;--related:#e8eff8;--same:#cfe0f5;--active:#bcd5f3;--danger:#c93250;--good:#1d8a45;--shadow:0 18px 40px #1a2b4a29;--scrim:#e9edf3d9;color-scheme:light}
+:root,:root[data-theme=midnight]{--bg:#0d1a2e;--bg-glow:#17305a;--surface:#14243a;--surface-2:#1b2e48;--line:#2a3f5c;--line-strong:#6d7f98;--text:#eef2f8;--muted:#8fa3be;--brass:#d9b26a;--brass-deep:#a9843f;--ink:#8cc4ff;--related:#182a43;--same:#22426a;--active:#2b5182;--danger:#e5536b;--good:#6fd39a;--on-accent:#1a1305;--shadow:0 18px 40px #02081599;--scrim:#0d1a2ecc;color-scheme:dark}
+:root[data-theme=graphite]{--bg:#16181c;--bg-glow:#262b32;--surface:#1f2328;--surface-2:#2a2f36;--line:#343a42;--line-strong:#78818e;--text:#f3f5f8;--muted:#9aa3af;--brass:#6fdccb;--brass-deep:#3fb3a2;--ink:#6fdccb;--related:#262b31;--same:#22433f;--active:#2b5953;--danger:#ff6b6b;--good:#7fe0a0;--on-accent:#0e1a18;--shadow:0 18px 40px #02081599;--scrim:#16181ccc;color-scheme:dark}
+:root[data-theme=plum]{--bg:#1c1622;--bg-glow:#2e2239;--surface:#251d2e;--surface-2:#30263b;--line:#3b3047;--line-strong:#8d7d9f;--text:#f6f0f9;--muted:#ab9dba;--brass:#eab977;--brass-deep:#c4904c;--ink:#f4a9c6;--related:#2d2438;--same:#4a3456;--active:#5c3d6b;--danger:#ff6b7f;--good:#8fe0a8;--on-accent:#2a1a0c;--shadow:0 18px 40px #02081599;--scrim:#1c1622cc;color-scheme:dark}
+:root[data-theme=porcelain]{--bg:#eef1f6;--bg-glow:#fbfcfe;--surface:#ffffff;--surface-2:#f2f5f9;--line:#d6dce6;--line-strong:#4d5b72;--text:#101a2c;--muted:#5b677a;--brass:#1f5fd1;--brass-deep:#1849a6;--ink:#1f5fd1;--related:#eef3fb;--same:#d5e3fb;--active:#b9d1f7;--danger:#d0304c;--good:#1d8a45;--on-accent:#ffffff;--shadow:0 18px 40px #1a2b4a29;--scrim:#eef1f6d9;color-scheme:light}
+:root[data-theme=sage]{--bg:#ecf1ea;--bg-glow:#f8fbf6;--surface:#fbfcf9;--surface-2:#eef3eb;--line:#d2dbcc;--line-strong:#4f6150;--text:#1b281d;--muted:#5b6b5c;--brass:#2c7a49;--brass-deep:#215f38;--ink:#2c7a49;--related:#edf3ea;--same:#d2e7d1;--active:#b8dcc0;--danger:#c2373f;--good:#2c7a49;--on-accent:#ffffff;--shadow:0 18px 40px #1a2b4a29;--scrim:#ecf1ead9;color-scheme:light}
+:root[data-theme=contrast]{--bg:#000000;--bg-glow:#000000;--surface:#000000;--surface-2:#161616;--line:#4a4a4a;--line-strong:#d0d0d0;--text:#ffffff;--muted:#c8c8c8;--brass:#ffd84d;--brass-deep:#e6b800;--ink:#ffd84d;--related:#161616;--same:#3a3200;--active:#5c4d00;--danger:#ff5c5c;--good:#7dff9a;--on-accent:#000000;--shadow:0 18px 40px #02081599;--scrim:#000000cc;color-scheme:dark}
+:root{--nf:Atkinson,system-ui,sans-serif;--nw:700;--nuw:600;--nus:normal}
+:root[data-font=lexend]{--nf:Lexend,sans-serif;--nw:600;--nuw:500}:root[data-font=nunito]{--nf:Nunito,sans-serif;--nw:800;--nuw:700}:root[data-font=serif]{--nf:SourceSerif,serif;--nw:650;--nuw:550}:root[data-font=fraunces]{--nf:Fraunces,serif;--nw:600;--nuw:500;--nus:italic}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{height:100%;margin:0}
 body{background:radial-gradient(120% 70% at 50% 0%,var(--bg-glow),var(--bg) 70%) fixed;color:var(--text);font-family:Figtree,system-ui,sans-serif;font-variant-numeric:tabular-nums;-webkit-user-select:none;user-select:none;overflow:hidden}
 svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
@@ -26,23 +36,22 @@ body.daily #difficulty{display:none}body.daily #daily-pill{display:inline-block}
 .cell:nth-child(3n){border-right:1.5px solid var(--line-strong)}.cell:nth-child(9n){border-right:0}.cell:nth-child(n+19):nth-child(-n+27),.cell:nth-child(n+46):nth-child(-n+54){border-bottom:1.5px solid var(--line-strong)}.cell:nth-child(n+73){border-bottom:0}
 .cell.related{background:var(--related)}.cell.same{background:var(--same)}.cell.active{background:var(--active)}
 .cell.active::after{content:'';position:absolute;inset:1px;border-radius:4px;box-shadow:inset 0 0 0 2px var(--brass);animation:ring .25s cubic-bezier(.3,.7,.4,1.3)}
-.digit{font:600 clamp(18px,6vw,30px)/1 Fraunces,serif;font-variation-settings:'opsz' 36}
-.cell.user .digit{font-style:italic;font-weight:500;color:var(--ink)}
+.digit{font-family:var(--nf);font-weight:var(--nw);font-size:clamp(18px,6vw,30px);line-height:1;font-variation-settings:'opsz' 36}
+.cell.user .digit{font-style:var(--nus);font-weight:var(--nuw);color:var(--ink)}
 .cell.wrong{background:color-mix(in srgb,var(--danger) 22%,transparent)}.cell.wrong .digit{color:var(--danger);text-decoration:line-through 1.5px}
-.pencil{display:grid;grid-template-columns:repeat(3,1fr);width:100%;height:100%;padding:2px;align-items:center;justify-items:center;color:var(--muted);font:600 clamp(7px,2vw,11px)/1 Figtree,sans-serif}.pencil span{transition:color .2s}.pencil .hl{color:var(--brass)}
+.pencil{display:grid;grid-template-columns:repeat(3,1fr);width:100%;height:100%;padding:2px;align-items:center;justify-items:center;color:var(--muted);font:600 clamp(7px,2vw,11px)/1 var(--nf)}.pencil span{transition:color .2s}.pencil .hl{color:var(--brass)}
 #message{height:22px;text-align:center;font-size:14px;color:var(--muted);transition:color .2s}#message.error{color:var(--danger);font-weight:700}
 #numbers{display:grid;grid-template-columns:repeat(9,1fr);gap:5px}
 #numbers button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 0 7px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
-#numbers b{font:500 clamp(22px,6.4vw,30px)/1 Fraunces,serif;font-variation-settings:'opsz' 48;color:var(--ink)}#numbers small{font-size:10px;color:var(--muted)}
+#numbers b{font-family:var(--nf);font-weight:var(--nuw);font-size:clamp(22px,6.4vw,30px);line-height:1;font-variation-settings:'opsz' 48;color:var(--ink)}#numbers small{font-size:10px;color:var(--muted)}
 #numbers button.complete{opacity:0;transform:scale(.6);pointer-events:none}
 .tools{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
 .tools button{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;font-size:12px;font-weight:600;color:var(--muted);border-radius:12px}
 .tools button.on{color:var(--brass)}.tools button.on svg{filter:drop-shadow(0 0 6px var(--brass))}
-.badge{position:absolute;top:2px;left:calc(50% + 8px);min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--brass);color:var(--bg);font-size:11px;font-weight:800;line-height:17px}.badge.zero{background:var(--line-strong)}
+.badge{position:absolute;top:2px;left:calc(50% + 8px);min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--brass);color:var(--on-accent);font-size:11px;font-weight:800;line-height:17px}.badge.zero{background:var(--line-strong)}
 .actions{display:grid;grid-template-columns:1.4fr 1fr;gap:8px}
 .btn{padding:14px;border-radius:14px;font-weight:700;font-size:15px;background:var(--surface);border:1px solid var(--line);color:var(--text)}
-.btn.primary{background:linear-gradient(180deg,var(--brass),var(--brass-deep));border-color:transparent;color:#1a1305;box-shadow:0 6px 18px color-mix(in srgb,var(--brass) 30%,transparent)}
-:root[data-theme=light] .btn.primary{color:#fff}
+.btn.primary{background:linear-gradient(180deg,var(--brass),var(--brass-deep));border-color:transparent;color:var(--on-accent);box-shadow:0 6px 18px color-mix(in srgb,var(--brass) 30%,transparent)}
 /* overlays */
 .overlay{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:18px;background:var(--scrim);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);visibility:hidden;opacity:0;transition:opacity .28s ease,visibility 0s .28s}
 .overlay.show{visibility:visible;opacity:1;transition:opacity .28s ease}
@@ -56,8 +65,10 @@ table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 4px;t
 label.setting{display:flex;justify-content:space-between;align-items:center;gap:14px;font-size:15px;font-weight:600}label.setting small{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:2px;line-height:1.35}
 .switch{appearance:none;-webkit-appearance:none;flex:none;width:46px;height:28px;border-radius:14px;background:var(--line);position:relative;transition:background-color .25s;margin:0}.switch::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0005;transition:transform .25s cubic-bezier(.3,.7,.4,1.3)}.switch:checked{background:var(--brass)}.switch:checked::after{transform:translateX(18px)}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface-2);border-radius:12px;padding:3px}.seg button{padding:8px 0;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted)}.seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 4px #0003}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.choice{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:var(--surface-2);border:2px solid transparent;font-size:13px;font-weight:600;text-align:left}.choice.on{border-color:var(--brass)}
+.sw{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font:700 13px Atkinson,sans-serif;border:1px solid #8884}.sample{flex:none;min-width:42px;font-size:20px;color:var(--ink)}
 #pause-screen .panel{align-items:center;text-align:center}
-.win-time{font:italic 500 56px/1 Fraunces,serif;font-variation-settings:'opsz' 144;color:var(--brass)}
+.win-time{font:var(--nus) var(--nuw) 56px/1 var(--nf);font-variation-settings:'opsz' 144;color:var(--brass)}
 .record{align-self:center;padding:5px 12px;border-radius:999px;background:color-mix(in srgb,var(--brass) 18%,transparent);color:var(--brass);font-size:13px;font-weight:700}
 #win-screen .panel{text-align:center}.good{color:var(--good);font-weight:700}
 /* motion */
@@ -117,7 +128,7 @@ label.setting{display:flex;justify-content:space-between;align-items:center;gap:
 <h3>Daily challenge</h3><div class="tiles"><div><b id="s-dstreak">0</b>Day streak</div><div><b id="s-dbest">0</b>Best streak</div><div><b id="s-dtotal">0</b>Solved</div></div>
 <div class="row-btns"><button class="btn" id="reset-stats">Reset stats</button><button class="btn primary close">Close</button></div></div></div>
 <div id="settings-screen" class="overlay"><div class="panel"><h2>Settings</h2>
-<div class="seg" id="s-theme"><button data-v="system">System</button><button data-v="dark">Dark</button><button data-v="light">Light</button></div>
+<h3>Colors</h3><div class="choices" id="s-theme"></div><h3>Number font</h3><div class="choices" id="s-font"></div>
 <label class="setting"><span>Mistake limit<small>The game ends after 3 mistakes</small></span><input type="checkbox" class="switch" id="s-limit"></label>
 <label class="setting"><span>Show timer</span><input type="checkbox" class="switch" id="s-timer"></label>
 <label class="setting"><span>Highlight matching numbers</span><input type="checkbox" class="switch" id="s-highlight"></label>
@@ -130,7 +141,10 @@ const LEVELS=['easy','medium','hard','expert','master'],NAMES={easy:'Easy',mediu
 const DAILY_LEVELS=['hard','easy','easy','medium','medium','hard','expert']; // Sunday..Saturday
 function load(k,d){try{let v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:d}catch(e){return d}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-let settings=Object.assign({theme:'system',limit:true,timer:true,highlight:true,autoclear:true,haptics:true},load('sudoku-settings',{}));
+let settings=Object.assign({theme:'system',font:'atkinson',limit:true,timer:true,highlight:true,autoclear:true,haptics:true},load('sudoku-settings',{}));
+if(settings.theme==='dark')settings.theme='midnight';if(settings.theme==='light')settings.theme='porcelain';
+const THEMES=[['system','Match phone','#0d1a2e','#eef1f6'],['midnight','Midnight & Brass','#0d1a2e','#d9b26a'],['graphite','Graphite & Teal','#1f2328','#6fdccb'],['plum','Dusk Plum','#251d2e','#f4a9c6'],['porcelain','Porcelain & Cobalt','#ffffff','#1f5fd1'],['sage','Sage Garden','#fbfcf9','#2c7a49'],['contrast','High contrast','#000000','#ffd84d']];
+const FONTS=[['atkinson','Atkinson Hyperlegible','Atkinson'],['lexend','Lexend','Lexend'],['nunito','Nunito','Nunito'],['serif','Source Serif','SourceSerif'],['fraunces','Fraunces (classic)','Fraunces']];
 let stats=load('sudoku-stats',{});
 let daily=Object.assign({last:'',streak:0,best:0,done:{}},load('sudoku-daily-log',{}));
 let solution=[],puzzle=[],values=[],pencils=[],selected=-1,mistakes=0,hints=3,seconds=0,notesMode=false,done=false,won=false,paused=false,history=[],difficulty='medium',gameMode='classic',dailyDate='';
@@ -252,8 +266,8 @@ function showStats(){let body=$('stats-body');body.replaceChildren();for(let k o
   for(let v of [NAMES[k],s.played,s.won,s.played?Math.round(100*s.won/s.played)+'%':'–',s.best?fmt(s.best):'–',s.streak]){let td=document.createElement('td');td.textContent=v;tr.append(td)}body.append(tr)}
   $('s-dstreak').textContent=currentStreak();$('s-dbest').textContent=daily.best;$('s-dtotal').textContent=Object.keys(daily.done).length;
   $('reset-stats').textContent='Reset stats';$('reset-stats').dataset.armed='';openOverlay('stats-screen')}
-function showSettings(){[...$('s-theme').children].forEach(b=>b.classList.toggle('on',b.dataset.v===settings.theme));for(let k of ['limit','timer','highlight','autoclear','haptics'])$('s-'+k).checked=settings[k];openOverlay('settings-screen')}
-function applyTheme(){let t=settings.theme==='system'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):settings.theme;document.documentElement.dataset.theme=t}
+function showSettings(){[...$('s-theme').children].forEach(b=>b.classList.toggle('on',b.dataset.v===settings.theme));[...$('s-font').children].forEach(b=>b.classList.toggle('on',b.dataset.v===settings.font));for(let k of ['limit','timer','highlight','autoclear','haptics'])$('s-'+k).checked=settings[k];openOverlay('settings-screen')}
+function applyTheme(){let t=settings.theme==='system'?(matchMedia('(prefers-color-scheme: light)').matches?'porcelain':'midnight'):settings.theme;document.documentElement.dataset.theme=t;document.documentElement.dataset.font=settings.font}
 
 /* ---------- wiring ---------- */
 buildBoard();
@@ -269,7 +283,8 @@ $('daily-classic').onclick=backToClassic;$('win-new').onclick=fresh;
 $('reset-stats').onclick=e=>{let b=e.currentTarget;if(!b.dataset.armed){b.dataset.armed='1';b.textContent='Tap again to reset';return}stats={};daily={last:'',streak:0,best:0,done:{}};save('sudoku-stats',stats);save('sudoku-daily-log',daily);showStats()};
 document.querySelectorAll('.overlay .close').forEach(b=>b.onclick=closeOverlays);
 document.querySelectorAll('.overlay').forEach(o=>o.onclick=e=>{if(e.target===o&&o.id!=='pause-screen')closeOverlays()});
-[...$('s-theme').children].forEach(b=>b.onclick=()=>{settings.theme=b.dataset.v;save('sudoku-settings',settings);applyTheme();showSettings()});
+for(let [v,name,bg,fg] of THEMES){let b=document.createElement('button');b.className='choice';b.dataset.v=v;b.innerHTML='<span class="sw"></span>';b.firstChild.style.cssText=v==='system'?'background:linear-gradient(135deg,'+bg+' 50%,'+fg+' 50%)':'background:'+bg+';color:'+fg;b.firstChild.textContent=v==='system'?'':'7';b.append(name);b.onclick=()=>{settings.theme=v;save('sudoku-settings',settings);applyTheme();showSettings()};$('s-theme').append(b)}
+for(let [v,name,fam] of FONTS){let b=document.createElement('button');b.className='choice';b.dataset.v=v;b.innerHTML='<span class="sample">123</span>';b.firstChild.style.fontFamily=fam;b.append(name);b.onclick=()=>{settings.font=v;save('sudoku-settings',settings);applyTheme();showSettings()};$('s-font').append(b)}
 for(let k of ['limit','timer','highlight','autoclear','haptics'])$('s-'+k).onchange=e=>{settings[k]=e.target.checked;save('sudoku-settings',settings);
   if(k==='limit'&&!settings.limit&&done&&!won){done=false;message('Mistake limit is off. Keep going.')}
   if(k==='limit'&&settings.limit&&!done&&mistakes>=3){done=true;message('Three mistakes. Undo the last move or start again.',true)}
